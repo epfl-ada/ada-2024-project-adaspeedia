@@ -1,2 +1,13 @@
 run_id	steps	path
 0	5	Acceleration;Physics;Computer;Internet;World_Wide_Web;Mozilla_Firefox
+0	5	Acceleration;Physics;Computer;Internet;World_Wide_Web;Mozilla_Firefox
+0	5	14th_century;Black_Death;Europe;Africa;Atlantic_slave_trade;African_slave_trade
+1	2	14th_century;Europe;Greece
+2	0	14th_century;Renaissance;14th_century;LOOP_DETECTED
+3	4	14th_century;Black_Death;Alchemy;Gunpowder;Fire
+4	0	14th_century;Renaissance;Italian_Renaissance;Renaissance;LOOP_DETECTED
+5	4	14th_century;Black_Death;Alchemy;Chemistry;Sodium
+6	4	14th_century;Edward_III_of_England;Richard_II_of_England;British_monarchy;Elizabeth_I_of_England
+7	0	14th_century;Black_Death;19th_century;American_Civil_War;Slavery;United_States;Boston%2C_Massachusetts;United_States;LOOP_DETECTED
+8	4	2004_Atlantic_hurricane_season;Atlantic_Ocean;Africa;Culture;Art
+9	0	2004_Atlantic_hurricane_season;Atlantic_Ocean;Europe;European_Union;Euro;Europe;LOOP_DETECTED

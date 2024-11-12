@@ -22,9 +22,12 @@ paths_finished = pd.read_csv(DATA_FOLDER + 'paths_finished.tsv', sep='\t', skipr
 # Prepare the links dictionary for fast lookup
 links_dict = links.groupby('linkSource')['linkTarget'].apply(list).to_dict()
 
-# Initialize output data structures
-llm_choices = []
-llm_paths = []
+# Load or initialize output data structures
+choices_file = 'tests/llm_choices.tsv'
+paths_file = 'tests/llm_paths.tsv'
+
+llm_choices_df = pd.read_csv(choices_file, sep='\t') if os.path.exists(choices_file) else pd.DataFrame(columns=['run_id', 'article', 'links', 'link_chosen'])
+llm_paths_df = pd.read_csv(paths_file, sep='\t') if os.path.exists(paths_file) else pd.DataFrame(columns=['run_id', 'steps', 'path'])
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Navigate Wikipedia paths using an LLM.')
@@ -39,11 +42,16 @@ run_id = args.start_run_id
 
 print("Starting navigation...")
 
-# Keep track of processed paths to avoid duplicates
+# Keep track of processed paths and skipped items
 processed_paths = set()
+skipped_count = 0
+processed_count = 0
 
 # Iterate over the specified range of paths in paths_finished.tsv
-for index, row in paths_finished.iloc[start_line:start_line + num_items].iterrows():
+for index, row in paths_finished.iloc[start_line:].iterrows():
+    if processed_count >= num_items:
+        break  # Stop after processing the specified number of items
+
     path = row['path'].split(';')
     start_article = path[0]
     end_article = path[-1]
@@ -52,6 +60,7 @@ for index, row in paths_finished.iloc[start_line:start_line + num_items].iterrow
     path_key = (start_article, end_article)
     if path_key in processed_paths:
         print(f"Skipping duplicate path: {start_article} -> {end_article}")
+        skipped_count += 1
         continue
 
     # Mark this path as processed
@@ -68,7 +77,9 @@ for index, row in paths_finished.iloc[start_line:start_line + num_items].iterrow
         linked_articles = links_dict.get(current_article, [])
 
         if not linked_articles:
-            print(f"No outgoing links from {current_article}.")
+            print(f"No outgoing links from {current_article}. Appending NO_LINK.")
+            path_taken.append('NO_LINK')
+            steps = 0  # Set steps to 0 for unfinished path
             break
 
         print(f"Step {steps}: {current_article}")
@@ -96,16 +107,18 @@ for index, row in paths_finished.iloc[start_line:start_line + num_items].iterrow
 
         # Validate the choice
         if choice not in linked_articles:
-            print(f"Invalid choice '{choice}' made by the LLM. Selecting the first link as fallback.")
-            choice = linked_articles[0]
+            print(f"Invalid choice '{choice}' made by the LLM. Appending WRONG_ANSWER.")
+            path_taken.append('WRONG_ANSWER')
+            steps = 0  # Set steps to 0 for invalid choice
+            break
 
         # Record the choice
-        llm_choices.append({
-            'run_id': run_id,
-            'article': current_article,
-            'links': linked_articles,
-            'link_chosen': choice
-        })
+        llm_choices_df = pd.concat([llm_choices_df, pd.DataFrame({
+            'run_id': [run_id],
+            'article': [current_article],
+            'links': [linked_articles],
+            'link_chosen': [choice]
+        })])
 
         print(f"Selected link: {choice}")
 
@@ -116,8 +129,8 @@ for index, row in paths_finished.iloc[start_line:start_line + num_items].iterrow
 
         # Check for loops
         if current_article in visited_articles:
-            print(f"Loop detected at {current_article}. Marking as PATH NOT FINISHED.")
-            path_taken.append('PATH NOT FINISHED')
+            print(f"Loop detected at {current_article}. Marking as LOOP_DETECTED.")
+            path_taken.append('LOOP_DETECTED')
             steps = 0  # Set steps to 0 for unfinished path
             break
         visited_articles.add(current_article)
@@ -126,21 +139,25 @@ for index, row in paths_finished.iloc[start_line:start_line + num_items].iterrow
         time.sleep(1)
 
     # Record the path taken
-    llm_paths.append({
-        'run_id': run_id,
-        'steps': steps,
-        'path': ';'.join(path_taken)
-    })
+    llm_paths_df = pd.concat([llm_paths_df, pd.DataFrame({
+        'run_id': [run_id],
+        'steps': [steps],
+        'path': [';'.join(path_taken)]
+    })])
 
-    # Increment run_id for the next path
+    # Increment run_id and processed_count
     run_id += 1
+    processed_count += 1
 
-# Convert the results to DataFrames
-llm_choices_df = pd.DataFrame(llm_choices)
-llm_paths_df = pd.DataFrame(llm_paths)
+# Save the results to TSV files, appending new rows
+llm_choices_df.to_csv(choices_file, sep='\t', index=False, mode='a', header=not os.path.exists(choices_file))
+llm_paths_df.to_csv(paths_file, sep='\t', index=False, mode='a', header=not os.path.exists(paths_file))
 
-# Save the results to TSV files
-llm_choices_df.to_csv('tests/llm_choices.tsv', sep='\t', index=False)
-llm_paths_df.to_csv('tests/llm_paths.tsv', sep='\t', index=False)
-
-print("Navigation completed.")
+# Log summary
+total_lines = processed_count + skipped_count
+print(f"\nNavigation completed.")
+print(f"Processed items: {processed_count}")
+print(f"Skipped items: {skipped_count}")
+print(f"Total lines handled: {processed_count + skipped_count}")
+print(f"So next time, start at line: {processed_count + skipped_count + start_line}")
+print(f"With run_id: {run_id + 1}")
