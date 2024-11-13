@@ -28,34 +28,65 @@ The optional questions, to address only if we have the time:
 - How does the obtained distance measure and its ratings change if we prompt the LLM to use a specific
   notion of distance while it is playing the game and choosing which links to pick?
 
+## Additional datasets
+
+We are using two additional datasets that we generate ourselves.
+
+### Dataset 1: Games of Wikispeedia played by LLMs
+
+We wrote a script that makes an LLM play Wikispeedia. It works by picking a starting and a goal article,
+and then iteratively fetching the list of outlinks of this article and asking the LLM to pick one in order
+to reach the goal article, until this article is reached. Each new article leas to a new prompt with a fresh
+context for the LLM, we do not keep previous choices made along the path in the LLM’s context. So at each
+iteration, we send the LLM 1) the title of the current article 2) the list of its outlinks 3) the title of
+the target article 4) our prompt instructing it to pick one of the outlinks in order to reach the target.
+We chose this to have faster and cheaper inference. If the LLM starts going into a loop, our scripts detects
+it, stops the process, writes the incomplete path into our dataset along with an indication that this path
+went into a loop and is thus incomplete.
+
+We do this for every pair of starting and target articles encountered in `paths_finished.tsv` and we save
+it in a similar format, including both articles’ titles along with the game path and its length.
+
+We use this dataset to compute a measure of semantic distance, exactly the same way the paper does using
+Wikispeedia games played by humans.
+
+### Dataset 2: Pairwise article distances from an embedding model
+
+We generate this dataset by picking the pairs of starting and goal articles we encounter in the original
+dataset, by computing their respective embeddings using a pre-trained embedding model (TODO which one),
+and computing the distance between these two embeddings vectors.
+
+This gives us a third measure of semantic distance, on top of the one obtained from the Wikispeedia games
+played by humans and the one obtained from Wikispeedia games played by LLMs.
+
 ## Methods
 
 For now, it seems we would need to:
 
-- Select the articles for which we have a distance value in the original dataset
-- Write a script that makes an LLM play Wikispeedia, by, for every game:
+- [x] Select the articles for which we have a distance value in the original dataset
+- [x] Write a script that makes an LLM play Wikispeedia, by, for every game:
   - Picking a starting and a target article (only pairs that already have a distance value in the original dataset)
   - Asking the LLM to pick one of the outlinks in the current article, in a loop until it reaches the target
-- Save the results in a dataset with a format similar to `paths_finished.tsv`
-- Compute the distance between the vector embeddings for these pairs of articles that had a distance value in
+- [x] Save the results in a dataset with a format similar to `paths_finished.tsv`
+- [ ] Compute the distance between the vector embeddings for these pairs of articles that had a distance value in
   the original dataset
   - For this, we need to pick a distance metric to compute the distance between two embeddings vectors: cosine,
     Euclidean, Manhattan, etc.
-- Re-implement the computation of the distance measure described in section 3 of the Wikispeedia paper
-- In order to filter out unrelated concepts as described in section 4 of the Wikispeedia paper,
+- [ ] Re-implement the computation of the distance measure described in section 3 of the Wikispeedia paper
+- [x] In order to filter out unrelated concepts as described in section 4 of the Wikispeedia paper,
   re-implement the splitting of paths into the “getting away” and “homing in” phases 
   - For this, we need to obtain from Robert West the neural network used to split the paths
   - Or we would have to compute the information game picture in Figure 2 of the paper and split the
    paths on the article with the lowest information gain, but it performs worse than the neural net
-- Compute the distances between articles using only the “homing in” phase determined in the split
-- Rate the quality of the semantic distance measure we obtain, in a similar way to section 5 of the paper
+- [ ] Compute the distances between articles using only the “homing in” phase determined in the split
+- [ ] Rate the quality of the semantic distance measure we obtain, in a similar way to section 5 of the paper
   - Either use humans on MTurk as the original study does
   - Or use an LLM to do the rating
   - Or do both and compare the results
-- Analyze how well our distance measure based on LLM games of Wikispeedia is rated (by humans or by an LLM)
+- [ ] Analyze how well our distance measure based on LLM games of Wikispeedia is rated (by humans or by an LLM)
   against the distance measure based on the human games of Wikispeedia and against the distance measure based
   on vector embeddings
-- Draw conclusions as to which method encodes the most “semantic common sense”
+- [ ] Draw conclusions as to which method encodes the most “semantic common sense”
 
 ## Proposed Timeline
 
@@ -64,6 +95,10 @@ Nov 7th:
 - Have the dataset of LLM-played Wikispeedia games generated
 - Have the dataset distances between the vector embeddings generated
 - Have clarified the next deadlines
+
+## Team organization until P3
+
+TODO
 
 ## Quickstart
 
