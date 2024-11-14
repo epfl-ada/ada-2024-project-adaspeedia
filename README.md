@@ -15,18 +15,53 @@ If we still have time, we will on top of this try to:
 
 ## Research Questions
 
-The main questions:
-- Would we obtain a different semantic distance measure if an LLM played the Wikispeedia game instead
-  of humans?
-- How much difference? (quantitative) Of which kind? (qualitative)
-- Which measure would be preferred, either by humans or by LLMs? I.e. which measure would give related
-  concepts that make the most sense?
-- Can we extract another measure of semantic distance from the *embeddings models* used by LLMs,
-  and compare it to the previous ones?
+The main question:
+- What notion of semantic distance do LLMs have
+- Eliciting semantic distances from LLMs
+- Comparing semantic distances elicited form LLMs and from humans
+- How do LLMs play wikispeedia
 
-The optional questions, to address only if we have the time:
+
+Sub-questions:
+- Politization: Is the wikispeedia semantic distance of LLM biased when measured on two articles judged sensitive to associate by the LLM?
+  Does the underlying politization introduce biases in the computed semantic distance (from LLM games)?
+- What distribution does the difference between human and LLM distances follow?
+  - What are the articles for which humans and LLM distances differ, or agree? Do they belong to specific categories?
+  - How much difference and for which articles?
+- Do we observe the same difference between distances from human games and LLMs games, and between distances from human
+  games and LLM embeddings?
+- Is there a correlation between the distances from LLM games and the ones from LLM embeddings vectors?
+- Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do? If yes, then:
+  - Do we observe a different distribution for the length of the getting away phase and the length of the homing in
+    phase between humans and LLMs?
+- How is the difficulty rating given by human players related to 1) path length and 2) success rate of LLM games?
+  - I.e. are games difficult for humans also difficult for LLMs?
+  - Limitation: we don’t know if we will have enough data to answer this question, but if not we will focus on the
+    other questions. We would need to have the distance data between the start and end article of many paths. And we
+    need that these paths also have a difficulty rating.
+- Do LLMs find shorter paths than humans in average?
+
+Potential additional sub-questions:
+- Does the path length correlate with the semantic distance between the starting and goal article of the path?
+- Is there a difference in the frequency of categories visited by humans and LLMs?
+
+Discarded questions:
+- Which semantic distance is “better,” i.e. encodes the most “common sense” as measured by crowd-workers in section
+  5.2 of the paper? Answering this question seemed impractical to implement, whether the ratings would be collected
+  with human crowd-workers or with LLMs instructed to perform the same task (after verifying they give similar results).
 - How does the obtained distance measure and its ratings change if we prompt the LLM to use a specific
   notion of distance while it is playing the game and choosing which links to pick?
+- prompt engineering
+
+Limitations of the approach (methods):
+- The performance of the LLM depends on many factors: prompting strategy, keeping all the path in the context or
+  starting fresh at each article along the path, telling it which heuristic to use to pick the next article, etc.
+  These might bias our results, but we chose not to cross-test all of these factors as our dataset seemed good
+  enough, we have already enough questions to explore, and these seemed far from data analysis.
+- If we end up getting exactly the same semantic distances from LLM games and human games, then most of our questions
+  would be trivial to answer, as there would be no difference. We thought this could threaten our project, but we think
+  the odds of this happening are low, and if it happens we can still transpose our questions to the distances obtained
+  via the embeddings models.
 
 ## Additional datasets
 
@@ -60,6 +95,8 @@ This gives us a third measure of semantic distance, on top of the one obtained f
 played by humans and the one obtained from Wikispeedia games played by LLMs.
 
 ## Methods
+
+**hypothesis testing**
 
 For now, it seems we would need to:
 
@@ -96,9 +133,16 @@ Nov 7th:
 - Have the dataset distances between the vector embeddings generated
 - Have clarified the next deadlines
 
+After P2:
+
+Week 1
+- Initial analyses of the computed distances
+
+Week 2
+- Decide which questions seem most interesting based on the initial analyses
+
 ## Team organization until P3
 
-TODO
 
 ## Quickstart
 
