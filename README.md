@@ -17,14 +17,7 @@ How do the semantic distances elicited from LLMs using the Wikispeedia measure o
 
 ### Some subquestions we aim to answer:
 1. What distribution does the difference between human and LLM distances follow?
-  - What are the articles for which humans and LLM distances differ, or agree? Do they belong to specific categories?
-  - Does the path length correlate with the semantic distance between the starting and goal article of the path?
-  - How much difference and for which articles?
-
-2. Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do? If yes, then:
-  - Do we observe a different distribution for the length of the getting away phase and the length of the homing in
-    phase between humans and LLMs?
-
+2. Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do?
 3. Do LLMs find shorter paths than humans on average?
 
 4. Politicization: Is the wikispeedia semantic distance of LLM biased when measured on two articles judged sensitive to associate by the LLM?
@@ -138,24 +131,37 @@ conda install --file requirements.txt
 
 
 ### How to use the library
-Tell us how the code is arranged, any explanations goes here.
 
+Download [wikispeedia_paths-and-graph.tar.gz](https://snap.stanford.edu/data/wikispeedia/wikispeedia_paths-and-graph.tar.gz)
+and uncompress it in the `data` folder to obtain the following:
+
+```
+├── data
+    └── wikispeedia_paths-and-graph
+        ├── articles.tsv
+        ├── categories.tsv
+        ├── links.tsv
+        ├── paths_finished.tsv
+        ├── paths_unfinished.tsv
+        └── shortest-path-distance-matrix.txt
+```
+
+You can simply run the `results.ipynb` notebook, and it will do all the work: loading the data, computing probabilities
+and information gain, splitting paths to get only the “homing in” phase, computing the resulting semantic distance,
+computing the distances between the embedding vectors.
+
+We have pre-computed the results of the LLM games and the semantic distances and stored the results in the `data`
+folder, because they were expensive to compute.
 
 
 ## Project Structure
 
-The directory structure of new project looks like this:
-
 ```
-├── data                        <- Project data files
+├── data                        <- Our generated datasets, along with the Wikispeedia dataset that must be downloaded separetely
 │
 ├── src                         <- Source code
-│   ├── data                            <- Data directory
-│   ├── models                          <- Model directory
 │   ├── utils                           <- Utility directory
-│   ├── scripts                         <- Shell scripts
-│
-├── tests                       <- Tests of any kind
+│   ├── scripts                         <- Python scripts to generate our datasets
 │
 ├── results.ipynb               <- a well-structured notebook showing the results
 │
