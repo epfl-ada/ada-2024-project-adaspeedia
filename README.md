@@ -155,11 +155,9 @@ cd <project repo>
 conda create -n <env_name> python=3.11 or ...
 conda activate <env_name>
 
-
 # install requirements
-pip install -r pip_requirements.txt
+conda install --file requirements.txt
 ```
-
 
 
 ### How to use the library

@@ -1,0 +1,11 @@
+python-dotenv
+pytorch
+scikit-learn
+sentence-transformers
+pandas
+seaborn
+numpy
+mistralai
+openai
+jupyterlab
+matplotlib
