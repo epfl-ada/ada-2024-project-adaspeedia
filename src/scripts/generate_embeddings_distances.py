@@ -6,12 +6,34 @@ from sklearn.metrics.pairwise import cosine_similarity
 from scipy.spatial.distance import euclidean
 
 def get_embeddings_distances(all_articles, all_distance_pairs, file_path):
+    """
+    Get the data from the .csv file if it’s there, otherwise run the long computation
 
-    return pd.read_csv(file_path, converters={'pair': ast.literal_eval})
-    #except FileNotFoundError:
-      #  generate_embeddings_distances(all_articles, all_distance_pairs, file_path)
+    Parameters:
+        all_articles (set): set of all articles
+        all_distance_pairs (set): set of all distance pairs we consider
+        file_path (string): path to the csv file
+
+    Returns:
+        Pandas DataFrame with columns ['pair', 'cosine_similarity', 'euclidean_distance', 'sbert_cosine_similarity']
+    """
+    try:
+        return pd.read_csv(file_path, converters={'pair': ast.literal_eval})
+    except FileNotFoundError:
+        generate_embeddings_distances(all_articles, all_distance_pairs, file_path)
 
 def generate_embeddings_distances(all_articles, all_distance_pairs, file_path):
+    """
+    Run all the computations to get the distances between the pairs of articles we consider
+
+    Parameters:
+        all_articles (set): set of all articles
+        all_distance_pairs (set): set of all distance pairs we consider
+        file_path (string): path to the csv file
+
+    Returns:
+        Pandas DataFrame with columns ['pair', 'cosine_similarity', 'euclidean_distance', 'sbert_cosine_similarity']
+    """
     model_name = "bert-base-uncased"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name)

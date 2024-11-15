@@ -8,7 +8,7 @@ def pagerank(M, d: float = 0.85):
     Parameters
     ----------
     M : numpy array
-        adjacency matrix where M_i,j represents the link from 'j' to 'i', such that for all 'j'
+        adjacency matrix (square) where M_i,j represents the link from 'j' to 'i', such that for all 'j'
         sum(i, M_i,j) = 1
     d : float, optional
         damping factor, by default 0.85
@@ -34,9 +34,16 @@ def pagerank(M, d: float = 0.85):
 
 
 def build_transition_matrix(links):
-    '''
-    links: the links pd dataframe based on the links tsv file.
-    '''
+    """
+    Build the adjacency matrix used in the PageRank algorithm
+
+    Parameters:
+        links: the links dataframe based on the links.tsv file.
+
+    Returns:
+        square matrix where M_i,j represents the link from 'j' to 'i', such that for all 'j'
+        sum(i, M_i,j) = 1
+    """
 
     #Create list of all unique articles mentioned as starting points or endpoints of links.
     nodes = np.unique(links[['linkSource', 'linkTarget']].values.flatten())
