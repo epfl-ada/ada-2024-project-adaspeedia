@@ -17,20 +17,16 @@ How do the semantic distances elicited from LLMs using the Wikispeedia measure o
 
 ### Some subquestions we aim to answer:
 1. What distribution does the difference between human and LLM distances follow?
-2. Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do?
-3. Do LLMs find shorter paths than humans on average?
 
-4. Politicization: Is the wikispeedia semantic distance of LLM biased when measured on two articles judged sensitive to associate by the LLM?
-  - Does the underlying politicization introduce biases in the computed semantic distance from LLM games?
+2. Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do?
+
+3. Do LLMs find shorter paths than humans on average and how do they compare when it comes to finished paths rated as difficult by humans ?
+
+4. Does the moderation of LLMs introduce biases in the computed semantic distance from LLM games, and in particular do LLMs inflate the semantic distance when considering sensitive associations like 'Slavery' and 'African American'?
 
 5. Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?
   - Is there a correlation between the distances from LLM games and the ones from LLM embeddings vectors?
 
-6. How is the difficulty rating given by human players related to the path length and the success rate of LLM games?
-  - I.e. are games difficult for humans also difficult for LLMs?
-  - Limitation: we don’t know if we will have enough data to answer this question, but if not we will focus on the
-    other questions. We would need to have the distance data between the start and end article of many paths. And we
-    need that these paths also have a difficulty rating.
 
 ### Discarded questions:
 - Which semantic distance is “better,” i.e. encodes the most “common sense” as measured by crowd-workers in section 5.2 of the paper? Answering this question seemed impractical to implement, whether the ratings would be collected with human crowd-workers or with LLMs instructed to perform the same task (after verifying they give similar results).
@@ -79,7 +75,17 @@ This gives us a third measure of semantic distance, on top of the one obtained f
 To compute the Wikispeedia semantic distance measures, we use the mathematical methods taken from the paper of Robert
 West et al., they are documented in the notebook as we introduce them with direct reference to the paper.
 
-Limitations of the approach:
+Our method for each subquestion:
+  1. We use our pipeline to make the LLM play Wikispeedia games and compute the distances based on the finished paths. We take the intersection of distances that were computed from human and LLM games, and describe the statistical properties of their difference, to test if the average semantic distance is higher for LLM or humans given the confidence that our number of samples allow us to have. We extract the pair of articles with a distance difference higher than the third quartile and analyse them to spot patterns, trying to answer the question: What are the articles for which humans and LLM distances differ, or agree? Do they belong to specific categories? We emit hypothesis based on this initial study and search for counter-examples, and plot the mean difference per category.
+  2.
+  3. We make the LLM play the Wikispeedia game with every pair of start and goal article that was played by humans, and compare the average length of the path for humans and the LLM. We then compare the mean path length on the subset of paths that have a high difficulty rating to test if the LLM performs significantly better and reaches the goal in less step than humans on difficult tasks. 
+  4. To answer this question, we need to:
+    - Find associations judged sensitive by the LLM that we can study: We extract every pair of articles for which we have the distance computed from human games. To know if these pairs of articles are judged sensitive by the LLM (here we use gpt4o-mini), we can use the `omni-moderation-latest` model made available by openAI. Sensitivity scores are returned per category (e.g. violence, hate). We already implemented the function `verify_sensitivity` to ensure feasibility.
+    - We can compare the difference in semantic distances between the LLM and humans by sensitivity score to test the hypothesis that the LLM introduces higher semantic distance when given a sensitive association of concepts (e.g. African Americans and Slavery) 
+  5.
+  
+
+Limitations of our approach:
 - The performance of the LLM depends on many factors: prompting strategy, keeping all the path in the context or
   starting fresh at each article along the path, telling it which heuristic to use to pick the next article, etc. 
   These might bias our results, but we chose not to cross-test all of these factors as our dataset seemed good enough,
@@ -93,8 +99,6 @@ Limitations of the approach:
   via the embeddings models.
 
 ## Timeline and organisation after P2
-
-todo 
 
 Week 1: sentiment scoring of the whole dataset with different methods, visualisations will help us determine what method to keep.
 
