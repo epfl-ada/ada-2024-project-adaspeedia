@@ -3,65 +3,52 @@
 
 ## Abstract
 
-This projects aims to make LLMs play Wikspeedia and extract semantic distance measures from the paths taken.
-We will compare this distance measure with the one obtained with human paths.
-We will also try to prompt the LLM to navigate the links using different heuristics (geographical similarity,
-cultural similarity, temporal similarity, etc.) to see what effect it has on the distance measure obtained.
 
-If we still have time, we will on top of this try to:
-- Extract a semantic distance measure from an embedding model used by an LLM
-- Make an LLM rate the resulting similarity rankings in the same way the Wikispeedia paper does,
-  and compare the LLM’s ratings to the humans’ ratings
+Robert West et al. showcased a novel method to infer semantic distances between concepts, based on the finished paths of the Wikispeedia online game. These distances where shown to outperform recognized measures of semantic relatedness in 2007. This projects aims to make LLMs play Wikispeedia and extract semantic distance measures from the paths taken, to compare them with the distances extracted from human games. Our objective is to understand what are the differences between the two sets of distances, and which insights we can take from these differences to better understand the emergent properties of LLMs' concept associations. To deepen this study, we enrich our analysis with distances extracted from the embedding space of the considered LLMs that we compare to the distances computed from human and LLM Wikispeedia games.
+
+
 
 ## Research Questions
 
-The main question:
-- What notion of semantic distance do LLMs have
-- Eliciting semantic distances from LLMs
-- Comparing semantic distances elicited form LLMs and from humans
-- How do LLMs play wikispeedia
+Main question:
+
+How do the semantic distances elicited from LLMs using the Wikispeedia measure of relatedness compare to the ones computed from human games ?
 
 
-Sub-questions:
-- Politization: Is the wikispeedia semantic distance of LLM biased when measured on two articles judged sensitive to associate by the LLM?
-  Does the underlying politization introduce biases in the computed semantic distance (from LLM games)?
-- What distribution does the difference between human and LLM distances follow?
+Some subquestions we aim to answer:
+1. What distribution does the difference between human and LLM distances follow?
   - What are the articles for which humans and LLM distances differ, or agree? Do they belong to specific categories?
   - How much difference and for which articles?
-- Do we observe the same difference between distances from human games and LLMs games, and between distances from human
-  games and LLM embeddings?
-- Is there a correlation between the distances from LLM games and the ones from LLM embeddings vectors?
-- Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do? If yes, then:
+
+2. Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do? If yes, then:
   - Do we observe a different distribution for the length of the getting away phase and the length of the homing in
     phase between humans and LLMs?
-- How is the difficulty rating given by human players related to 1) path length and 2) success rate of LLM games?
+
+3. Do LLMs find shorter paths than humans on average?
+
+4. Politicization: Is the wikispeedia semantic distance of LLM biased when measured on two articles judged sensitive to associate by the LLM?
+  - Does the underlying politicization introduce biases in the computed semantic distance from LLM games?
+
+5. Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?
+  - Is there a correlation between the distances from LLM games and the ones from LLM embeddings vectors?
+
+6. How is the difficulty rating given by human players related to the path length and the success rate of LLM games?
   - I.e. are games difficult for humans also difficult for LLMs?
   - Limitation: we don’t know if we will have enough data to answer this question, but if not we will focus on the
     other questions. We would need to have the distance data between the start and end article of many paths. And we
     need that these paths also have a difficulty rating.
-- Do LLMs find shorter paths than humans in average?
+
+
 
 Potential additional sub-questions:
 - Does the path length correlate with the semantic distance between the starting and goal article of the path?
-- Is there a difference in the frequency of categories visited by humans and LLMs?
+
 
 Discarded questions:
-- Which semantic distance is “better,” i.e. encodes the most “common sense” as measured by crowd-workers in section
-  5.2 of the paper? Answering this question seemed impractical to implement, whether the ratings would be collected
-  with human crowd-workers or with LLMs instructed to perform the same task (after verifying they give similar results).
-- How does the obtained distance measure and its ratings change if we prompt the LLM to use a specific
-  notion of distance while it is playing the game and choosing which links to pick?
-- prompt engineering
+- Which semantic distance is “better,” i.e. encodes the most “common sense” as measured by crowd-workers in section 5.2 of the paper? Answering this question seemed impractical to implement, whether the ratings would be collected with human crowd-workers or with LLMs instructed to perform the same task (after verifying they give similar results).
+- How does the obtained distance measure and its ratings change if we prompt the LLM to use a specific notion of distance while it is playing the game and choosing which links to pick?
+- How does prompt engineering impact semantic distance measures ? This question falls out of the scope of our analysis.
 
-Limitations of the approach (methods):
-- The performance of the LLM depends on many factors: prompting strategy, keeping all the path in the context or
-  starting fresh at each article along the path, telling it which heuristic to use to pick the next article, etc.
-  These might bias our results, but we chose not to cross-test all of these factors as our dataset seemed good
-  enough, we have already enough questions to explore, and these seemed far from data analysis.
-- If we end up getting exactly the same semantic distances from LLM games and human games, then most of our questions
-  would be trivial to answer, as there would be no difference. We thought this could threaten our project, but we think
-  the odds of this happening are low, and if it happens we can still transpose our questions to the distances obtained
-  via the embeddings models.
 
 ## Additional datasets
 
@@ -69,12 +56,14 @@ We are using two additional datasets that we generate ourselves.
 
 ### Dataset 1: Games of Wikispeedia played by LLMs
 
-We wrote a script that makes an LLM play Wikispeedia. It works by picking a starting and a goal article,
-and then iteratively fetching the list of outlinks of this article and asking the LLM to pick one in order
-to reach the goal article, until this article is reached. Each new article leas to a new prompt with a fresh
-context for the LLM, we do not keep previous choices made along the path in the LLM’s context. So at each
-iteration, we send the LLM 1) the title of the current article 2) the list of its outlinks 3) the title of
-the target article 4) our prompt instructing it to pick one of the outlinks in order to reach the target.
+We wrote a script that makes an LLM play Wikispeedia. It works by picking a starting and a goal article, and then iteratively fetching the list of outlinks of this article and asking the LLM to pick one in order
+to reach the goal article, until this article is reached. Each new article leads to a new prompt with a fresh context for the LLM. By default, the LLM does not have access to the history of the path it follows. At each
+iteration, we send the LLM:
+ 1. The title of the current article 
+ 2. The list of its outlinks 
+ 3. The title of the target article 
+ 4. Our prompt instructing it to pick one of the outlinks in order to reach the target.
+
 We chose this to have faster and cheaper inference. If the LLM starts going into a loop, our scripts detects
 it, stops the process, writes the incomplete path into our dataset along with an indication that this path
 went into a loop and is thus incomplete.
@@ -82,21 +71,32 @@ went into a loop and is thus incomplete.
 We do this for every pair of starting and target articles encountered in `paths_finished.tsv` and we save
 it in a similar format, including both articles’ titles along with the game path and its length.
 
-We use this dataset to compute a measure of semantic distance, exactly the same way the paper does using
-Wikispeedia games played by humans.
+The feasibility is ensured as we already finished the processing pipeline and our budget allows for a sufficient number of queries in order to make significant data analysis. 
+
+We use this dataset to compute a measure of semantic distance, in the same way the paper does using Wikispeedia games played by humans.
 
 ### Dataset 2: Pairwise article distances from an embedding model
 
-We generate this dataset by picking the pairs of starting and goal articles we encounter in the original
-dataset, by computing their respective embeddings using a pre-trained embedding model (TODO which one),
-and computing the distance between these two embeddings vectors.
+We generate this dataset by picking all the pairs of articles encountered along the "homing in" parts of the finished paths. We compute their respective embeddings using the pre-trained embedding model BERT, and then compute the distance between these two embeddings vectors.
 
-This gives us a third measure of semantic distance, on top of the one obtained from the Wikispeedia games
-played by humans and the one obtained from Wikispeedia games played by LLMs.
+The feasibility is ensured as we already finished the processing pipeline and our embedding distances are computed in `data/article_similarities.csv`
+
+This gives us a third measure of semantic distance, on top of the one obtained from the Wikispeedia games played by humans and the one obtained from Wikispeedia games played by LLMs.
 
 ## Methods
 
-**hypothesis testing**
+
+todo **introduce the words hypothesis testing**
+
+
+### LLM and Embeddings distances computation
+
+### Mathematical methods for analysis and processing
+todo 
+Details can be found in the main notebook
+### Methods for subquestions 
+
+
 
 For now, it seems we would need to:
 
@@ -125,7 +125,25 @@ For now, it seems we would need to:
   on vector embeddings
 - [ ] Draw conclusions as to which method encodes the most “semantic common sense”
 
-## Proposed Timeline
+Limitations of the approach:
+- The performance of the LLM depends on many factors: prompting strategy, keeping all the path in the context or starting fresh at each article along the path, telling it which heuristic to use to pick the next article, etc. These might bias our results, but we chose not to cross-test all of these factors as our dataset seemed good enough, we have already enough questions to explore, and these seemed far from data analysis.
+
+- For now we do not use the same LLM for computation of embedding distances and computation of Wikispeedia distances extracted from LLM games, as we use BERT for embedding distances computation and GPT4o mini or Mistral Large to compute Wikispeedia distances extracted from LLM games.
+
+- If we end up getting exactly the same semantic distances from LLM games and human games, then most of our questions would be trivial to answer, as there would be no difference. We thought this could threaten our project, but we think the odds of this happening are low, and if it happens we can still transpose our questions to the distances obtained via the embeddings models.
+
+## Timeline and organisation 
+
+Week 1: sentiment scoring of the whole dataset with different methods, visualisations will help us determine what method to keep.
+
+Week 2: split tasks across research sub-questions (see above), make visualisations to see which questions are the most interesting, give a strong causal conclusion to each research question.
+
+Week 3: Detailed sentiment trajectory and pattern analysis for the interesting sub questions. We'll delve into the sentiment data aligned with game paths, examining the influence of sentiments. We will try to make statistical models to answer specific questions. Predictive models can be made to help generating the user path for a random pair of articles.
+
+Week 4: Devise a data story from the analyses such that it is aligned with our statistical findings. Begin the webpage.
+
+Week 5: Cleaning the repository and wrapping up the data story webpage, host cohesive and interactive visualisations to display our outcome.
+
 
 Nov 7th:
 - Have the list of pairs of articles for which a distance exists in the original study’s dataset
