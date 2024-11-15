@@ -11,3 +11,4 @@ jupyterlab
 matplotlib
 scipy
 transformers
+statsmodel

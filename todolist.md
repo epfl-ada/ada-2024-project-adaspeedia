@@ -19,9 +19,9 @@
 
 #### **Project Goals and Analysis Plan**
 - [X] **Research Questions**: Clearly outline the research questions to address.
-- [ ] **Methods Outline**:
+- [x] **Methods Outline**:
   - [X] Specify the methods and techniques you plan to use, including essential mathematical details.
-  - [ ] Include alternative approaches considered and explain why they were dropped.
+  - [x] Include alternative approaches considered and explain why they were dropped.
   - [x] Ensure your proposed plan for analysis and data handling is reasonable and well-documented.
   - [X] Create a timeline of major project milestones.
 
@@ -37,14 +37,14 @@
 - [X] **Version Control**: Use GitHub for version control with clear and regular commits.
 
 #### **Deliverables Preparation**
-- [ ] **README.md**:
+- [x] **README.md**:
   - [X] **Title**: Choose a concise and relevant project title.
   - [X] **Abstract**: Write a 150-word description of the project’s idea and goals.
   - [X] **Research Questions**: List the research questions.
   - [X] **Proposed Additional Datasets**: Provide details on additional datasets (if any), including data format, size, and how they will be managed/enriched.
   - [X] **Methods**: Briefly describe the analytical methods you plan to use.
   - [X] **Proposed Timeline**: Outline key project milestones and timeline.
-  - [ ] **Organization**: Define internal team roles and responsibilities.
+  - [x] **Organization**: Define internal team roles and responsibilities.
   - [x] **Questions for TAs (Optional)**: List any questions for teaching assistants.
 - [x] **Jupyter Notebook**:
   - [X] Include all initial analyses, data exploration, preprocessing steps, and findings.
@@ -58,11 +58,11 @@
 - [x] **Data Handling Pipeline**:
   - [x] Implement and document a complete data preprocessing pipeline.
   - [X] Include any additional scripts or modules needed for the analysis.
-- [ ] **Notebook Submission**:
+- [x] **Notebook Submission**:
   - [X] Ensure that the primary Jupyter notebook is present and contains all initial analyses and findings.
-  - [ ] Validate that the notebook is functioning correctly (no broken links/cells).
+  - [x] Validate that the notebook is functioning correctly (no broken links/cells).
 
 #### **Review and Feedback**
-- [ ] **Internal Review**: Conduct a team review of the project plan, README.md, and code for clarity and completeness.
+- [x] **Internal Review**: Conduct a team review of the project plan, README.md, and code for clarity and completeness.
 - [ ] **TA Consultation (Optional)**: Schedule office hours with TAs for feedback on your project proposal.
 - [ ] **Final Adjustments**: Incorporate any feedback or adjustments before the final submission.
