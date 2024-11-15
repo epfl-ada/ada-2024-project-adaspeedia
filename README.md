@@ -30,52 +30,46 @@ We are using two additional datasets that we generate ourselves.
 
 ### Dataset 1: Games of Wikispeedia played by LLMs
 
-We wrote a script that makes an LLM play Wikispeedia. For each starting 
-article, it picks an outlink to follow until the goal is reached.
+We wrote a script that makes both GPT4o-mini and Mistral Large play 
+Wikispeedia. For each starting and goal articles in `paths_finished.tsv`, 
+the LLM picks an outlink to follow until the goal is reached.
 
-At each iteration, we send the LLM:
- 1. The title of the current article
- 2. The list of its outlinks
- 3. The title of the target article
- 4. Our prompt instructing it to pick one of the outlinks in order to reach the target
+The feasibility is ensured as we already finished the processing pipeline 
+and our budget allows for a sufficient number of queries. 
 
-We chose this to have faster and cheaper inference. If the LLM starts going into a loop, our scripts detects
-it, stops the process, writes the incomplete path into our dataset along with an indication that this path
-went into a loop and is thus incomplete.
-
-We do this for every pair of starting and target articles encountered in 
-`paths_finished.tsv`, using both GPT4o-mini and Mistral Large.
-
-The feasibility is ensured as we already finished the processing pipeline and our budget allows for a sufficient number of queries in order to make significant data analysis. 
-
-We use this dataset to compute a measure of semantic distance, in the same way the paper does using Wikispeedia games played by humans.
+We use this dataset to compute a second Wikispeedia measure of semantic 
+distance.
 
 ### Dataset 2: Pairwise article distances from an embedding model
 
-We generate this dataset by picking all the pairs of articles encountered along the "homing in" parts of the finished
-paths. We compute their embeddings using the pre-trained embedding model BERT, and then compute both the
-cosine similarity and the Euclidean distance between each pair of vectors.
-
-The feasibility is ensured as we already finished the processing pipeline and our embedding distances are computed in `data/article_similarities.csv`
-
-This gives us a third measure of semantic distance.
+We generated this dataset by picking all the pairs of articles encountered 
+along the "homing in" parts of the finished paths. We computed their 
+embeddings using the pre-trained embedding model BERT, and then computed 
+both the cosine similarity and the Euclidean distance between each pair of 
+vectors. This gives us a third measure of semantic distance.
 
 ## Methods
 
-To compute the Wikispeedia semantic distance measures, we use the mathematical methods taken from the paper of Robert
-West et al. They are documented in the notebook as we introduce them with 
-direct reference to the paper.
+We compute the Wikispeedia semantic distance measures as in the paper and as 
+described in our notebook.
 
 Our method for each subquestion:
-  1. We use our pipeline to make the LLM play Wikispeedia games and compute the distances based on the finished paths. We take the intersection of distances that were computed from human and LLM games, and describe the statistical properties of their difference, to test if the average semantic distance is higher for LLM or humans given the confidence that our number of samples allow us to have. We extract the pair of articles with a distance difference higher than the third quartile and analyse them to spot patterns, trying to answer the question: What are the articles for which humans and LLM distances differ, or agree? Do they belong to specific categories? We emit hypothesis based on this initial study and search for counter-examples, and plot the mean difference per category.
-
-  2. We compute the mean information gain along the paths, as in Fig 2 of the paper. We check whether the distribution has the same U-shape for LLMs as it has for humans. We can do t-tests for each quantile of path distance, comparing human and LLM information gain each time.
-
+  1. We take the intersection of distances that were computed from human and
+     LLM games. We test if the average semantic distance is higher for humans. 
+     We extract the pairs of articles with a distance difference higher than 
+     the third quartile and analyse them to spot patterns. We emit 
+     hypothesis based on this initial study and search for counter-examples. 
+     We then plot the mean difference per article category.
+  2. We compute the mean information gain along the paths, then check whether 
+     the distribution has the same U-shape for LLMs as it has for humans 
+     (t-test).
   3. We make the LLM play the Wikispeedia game with every pair of start and goal article that was played by humans, and compare the average length of the path for humans and the LLM. We then compare the mean path length on the subset of paths that have a high difficulty rating to test if the LLM performs significantly better and reaches the goal in less step than humans on difficult tasks. 
 
   4. To answer this question, we need to:
-    - Find associations judged sensitive by the LLM that we can study: We extract every pair of articles for which we have the distance computed from human games. To know if these pairs of articles are judged sensitive by the LLM (here we use gpt4o-mini), we can use the `omni-moderation-latest` model made available by openAI. Sensitivity scores are returned per category (e.g. violence, hate). We already implemented the function `verify_sensitivity` to ensure feasibility.
-    - We can compare the difference in semantic distances between the LLM and humans by sensitivity score to test the hypothesis that the LLM introduces higher semantic distance when given a sensitive association of concepts (e.g. African Americans and Slavery) 
+     - Find associations judged sensitive by the LLM that we can study: We 
+       extract every pair of articles for which we have the distance computed from human games. To know if these pairs of articles are judged sensitive by the LLM (here we use gpt4o-mini), we can use the `omni-moderation-latest` model made available by openAI. Sensitivity scores are returned per category (e.g. violence, hate). We already implemented the function `verify_sensitivity` to ensure feasibility.
+     - We can compare the difference in semantic distances between the LLM 
+       and humans by sensitivity score to test the hypothesis that the LLM introduces higher semantic distance when given a sensitive association of concepts (e.g. African Americans and Slavery) 
   5. We repeat the previous analyses but this time comparing human Wikispeedia distances to the embedding distances.
   
 
@@ -91,18 +85,22 @@ Limitations of our approach:
 
 ## Timeline and organisation after P2
 
-Two times per week, we will gather to share progress and have SCRUM meetings. We will use the SCRUM method to profit from new insights we gain when diving deeper into the dataset.
+Week 1: Finalize datasets for each subquestion using our pipeline. Start 
+analysing them and visualizing key statistics to refine our methods.
 
-Week 1: Leverage our pipeline to finish building the datasets we need for each subquestion. Start analysing the dataset and visualing key statistics to refine our methods and broaden our understanding of the dataset.
+Week 2: Distribute and prioritize the subquestions. Emit clear hypothesis for
+each and start building tests to challenge these hypotheses. 
 
-Week 2: Distribute the subquestions and prioritize the most promising ones based on our initial analysis. Emit clear hypothesis for each subquestion and start building tests to challenge these hypotheses. 
+Week 3: Consider the insights so far to identify potential new questions and 
+insightful results to integrate in our data story. Finish analysis on our 
+initial research questions and distribute the new research questions. 
 
-Week 3: Consider the insights from the previous weeks' work. Building upon those results, consider potential new questions and insightful results that we can integrate in our data story. Finish analysis on our initial research questions and distribute the new research questions according to the current workload distribution. 
+Week 4: Finish the analysis on the second round of research questions. Construct
+a plan for the data story set up its website. Merge the subquestions into a 
+coherent narrative according to our main results. 
 
-Week 4: Finish the analysis on the second round of research questions. Construct a plan for the final data story to build the website's structure, and merge the subquestions into a coherent narrative according to our main research question. 
-
-Week 5: Two members create strong visualisations to articulate our results and the other three finalize the data story website, getting inspired from the exemples provided from previous years.
-
+Week 5: Two members create strong visualisations to articulate our results and
+the other three finalize the data story website.
 
 ## Quickstart
 
