@@ -10,15 +10,17 @@ Robert West et al. showcased a novel method to infer semantic distances between 
 
 ## Research Questions
 
-Main question:
+### Main question:
 
 How do the semantic distances elicited from LLMs using the Wikispeedia measure of relatedness compare to the ones computed from human games ?
 
 
-Some subquestions we aim to answer:
+### Some subquestions we aim to answer:
 1. What distribution does the difference between human and LLM distances follow?
   - What are the articles for which humans and LLM distances differ, or agree? Do they belong to specific categories?
+  - Does the path length correlate with the semantic distance between the starting and goal article of the path?
   - How much difference and for which articles?
+
 
 2. Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do? If yes, then:
   - Do we observe a different distribution for the length of the getting away phase and the length of the homing in
@@ -39,12 +41,7 @@ Some subquestions we aim to answer:
     need that these paths also have a difficulty rating.
 
 
-
-Potential additional sub-questions:
-- Does the path length correlate with the semantic distance between the starting and goal article of the path?
-
-
-Discarded questions:
+### Discarded questions:
 - Which semantic distance is “better,” i.e. encodes the most “common sense” as measured by crowd-workers in section 5.2 of the paper? Answering this question seemed impractical to implement, whether the ratings would be collected with human crowd-workers or with LLMs instructed to perform the same task (after verifying they give similar results).
 - How does the obtained distance measure and its ratings change if we prompt the LLM to use a specific notion of distance while it is playing the game and choosing which links to pick?
 - How does prompt engineering impact semantic distance measures ? This question falls out of the scope of our analysis.
