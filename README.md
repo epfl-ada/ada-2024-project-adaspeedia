@@ -101,6 +101,8 @@ Limitations of the approach:
 
 ## Timeline and organisation after P2
 
+todo 
+
 Week 1: sentiment scoring of the whole dataset with different methods, visualisations will help us determine what method to keep.
 
 Week 2: split tasks across research sub-questions (see above), make visualisations to see which questions are the most interesting, give a strong causal conclusion to each research question.
@@ -118,9 +120,6 @@ Week 1
 
 Week 2
 - Decide which questions seem most interesting based on the initial analyses
-
-## Team organization until P3
-
 
 ## Quickstart
 
