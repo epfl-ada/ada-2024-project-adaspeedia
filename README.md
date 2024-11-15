@@ -77,12 +77,12 @@ West et al., they are documented in the notebook as we introduce them with direc
 
 Our method for each subquestion:
   1. We use our pipeline to make the LLM play Wikispeedia games and compute the distances based on the finished paths. We take the intersection of distances that were computed from human and LLM games, and describe the statistical properties of their difference, to test if the average semantic distance is higher for LLM or humans given the confidence that our number of samples allow us to have. We extract the pair of articles with a distance difference higher than the third quartile and analyse them to spot patterns, trying to answer the question: What are the articles for which humans and LLM distances differ, or agree? Do they belong to specific categories? We emit hypothesis based on this initial study and search for counter-examples, and plot the mean difference per category.
-  2.
+  2. We compute the mean information gain along the paths, as in Fig 2 of the paper. We check whether the distribution has the same U-shape for LLMs as it has for humans. We can do t-tests for each quantile of path distance, comparing human and LLM information gain each time.
   3. We make the LLM play the Wikispeedia game with every pair of start and goal article that was played by humans, and compare the average length of the path for humans and the LLM. We then compare the mean path length on the subset of paths that have a high difficulty rating to test if the LLM performs significantly better and reaches the goal in less step than humans on difficult tasks. 
   4. To answer this question, we need to:
     - Find associations judged sensitive by the LLM that we can study: We extract every pair of articles for which we have the distance computed from human games. To know if these pairs of articles are judged sensitive by the LLM (here we use gpt4o-mini), we can use the `omni-moderation-latest` model made available by openAI. Sensitivity scores are returned per category (e.g. violence, hate). We already implemented the function `verify_sensitivity` to ensure feasibility.
     - We can compare the difference in semantic distances between the LLM and humans by sensitivity score to test the hypothesis that the LLM introduces higher semantic distance when given a sensitive association of concepts (e.g. African Americans and Slavery) 
-  5.
+  5. We repeat the previous analyses but this time comparing human Wikispeedia distances to the embedding distances.
   
 
 Limitations of our approach:
@@ -90,7 +90,7 @@ Limitations of our approach:
   starting fresh at each article along the path, telling it which heuristic to use to pick the next article, etc. 
   These might bias our results, but we chose not to cross-test all of these factors as our dataset seemed good enough,
   we have already enough questions to explore, and these seemed far from data analysis.
-- For now we do not use the same LLM for computation of embedding distances and computation of Wikispeedia distances
+- For now, we do not use the same LLM for computation of embedding distances and computation of Wikispeedia distances
   extracted from LLM games, as we use BERT for embedding distances computation and GPT4o mini or Mistral Large to
   compute Wikispeedia distances extracted from LLM games.
 - If we end up getting exactly the same semantic distances from LLM games and human games, then most of our questions
