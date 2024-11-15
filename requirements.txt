@@ -9,3 +9,5 @@ mistralai
 openai
 jupyterlab
 matplotlib
+scipy
+transformers
