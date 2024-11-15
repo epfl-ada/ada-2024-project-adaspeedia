@@ -23,13 +23,6 @@ How do the semantic distances elicited from LLMs using the Wikispeedia measure o
 4. Does the moderation of LLMs introduce biases in the computed semantic distance from LLM games, and in particular do LLMs inflate the semantic distance when considering sensitive associations like 'Slavery' and 'African American'?
 
 5. Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?
-  - Is there a correlation between the distances from LLM games and the ones from LLM embeddings vectors?
-
-
-### Discarded questions:
-- Which semantic distance is “better,” i.e. encodes the most “common sense” as measured by crowd-workers in section 5.2 of the paper? Answering this question seemed impractical to implement, whether the ratings would be collected with human crowd-workers or with LLMs instructed to perform the same task (after verifying they give similar results).
-- How does the obtained distance measure and its ratings change if we prompt the LLM to use a specific notion of distance while it is playing the game and choosing which links to pick?
-- How does prompt engineering impact semantic distance measures ? This question falls out of the scope of our analysis.
 
 ## Additional datasets
 
@@ -37,41 +30,41 @@ We are using two additional datasets that we generate ourselves.
 
 ### Dataset 1: Games of Wikispeedia played by LLMs
 
-We wrote a script that makes an LLM play Wikispeedia. It works by picking a starting and a goal article, and then iteratively fetching the list of outlinks of this article and asking the LLM to pick one in order
-to reach the goal article, until this article is reached. Each new article leads to a new prompt with a fresh context for the LLM. By default, the LLM does not have access to the history of the path it follows. At each
-iteration, we send the LLM:
- 1. The title of the current article 
- 2. The list of its outlinks 
- 3. The title of the target article 
- 4. Our prompt instructing it to pick one of the outlinks in order to reach the target.
+We wrote a script that makes an LLM play Wikispeedia. For each starting 
+article, it picks an outlink to follow until the goal is reached.
+
+At each iteration, we send the LLM:
+ 1. The title of the current article
+ 2. The list of its outlinks
+ 3. The title of the target article
+ 4. Our prompt instructing it to pick one of the outlinks in order to reach the target
 
 We chose this to have faster and cheaper inference. If the LLM starts going into a loop, our scripts detects
 it, stops the process, writes the incomplete path into our dataset along with an indication that this path
 went into a loop and is thus incomplete.
 
-We do this for every pair of starting and target articles encountered in `paths_finished.tsv` and we save
-it in a similar format, including both articles’ titles along with the game path and its length.
+We do this for every pair of starting and target articles encountered in 
+`paths_finished.tsv`, using both GPT4o-mini and Mistral Large.
 
 The feasibility is ensured as we already finished the processing pipeline and our budget allows for a sufficient number of queries in order to make significant data analysis. 
 
 We use this dataset to compute a measure of semantic distance, in the same way the paper does using Wikispeedia games played by humans.
 
-We run this process with both GPT4o-mini and Mistral Large and store the results for analysis.
-
 ### Dataset 2: Pairwise article distances from an embedding model
 
 We generate this dataset by picking all the pairs of articles encountered along the "homing in" parts of the finished
-paths. We compute their respective embeddings using the pre-trained embedding model BERT, and then compute both the
+paths. We compute their embeddings using the pre-trained embedding model BERT, and then compute both the
 cosine similarity and the Euclidean distance between each pair of vectors.
 
 The feasibility is ensured as we already finished the processing pipeline and our embedding distances are computed in `data/article_similarities.csv`
 
-This gives us a third measure of semantic distance, on top of the one obtained from the Wikispeedia games played by humans and the one obtained from Wikispeedia games played by LLMs.
+This gives us a third measure of semantic distance.
 
 ## Methods
 
 To compute the Wikispeedia semantic distance measures, we use the mathematical methods taken from the paper of Robert
-West et al., they are documented in the notebook as we introduce them with direct reference to the paper.
+West et al. They are documented in the notebook as we introduce them with 
+direct reference to the paper.
 
 Our method for each subquestion:
   1. We use our pipeline to make the LLM play Wikispeedia games and compute the distances based on the finished paths. We take the intersection of distances that were computed from human and LLM games, and describe the statistical properties of their difference, to test if the average semantic distance is higher for LLM or humans given the confidence that our number of samples allow us to have. We extract the pair of articles with a distance difference higher than the third quartile and analyse them to spot patterns, trying to answer the question: What are the articles for which humans and LLM distances differ, or agree? Do they belong to specific categories? We emit hypothesis based on this initial study and search for counter-examples, and plot the mean difference per category.
@@ -87,17 +80,14 @@ Our method for each subquestion:
   
 
 Limitations of our approach:
-- The performance of the LLM depends on many factors: prompting strategy, keeping all the path in the context or
-  starting fresh at each article along the path, telling it which heuristic to use to pick the next article, etc. 
-  These might bias our results, but we chose not to cross-test all of these factors as our dataset seemed good enough,
-  we have already enough questions to explore, and these seemed far from data analysis.
-- For now, we do not use the same LLM for computation of embedding distances and computation of Wikispeedia distances
-  extracted from LLM games, as we use BERT for embedding distances computation and GPT4o mini or Mistral Large to
-  compute Wikispeedia distances extracted from LLM games.
-- If we end up getting exactly the same semantic distances from LLM games and human games, then most of our questions
-  would be trivial to answer, as there would be no difference. We thought this could threaten our project, but we think
-  the odds of this happening are low, and if it happens we can still transpose our questions to the distances obtained
-  via the embeddings models.
+- The LLM’s performance depends on factors like
+  prompting strategy, prompting with the current path’s history in the 
+  context or not. We do not optimize these as the generated was already 
+  valid for analysis.
+- For now, the embeddings models do not come from the same LLMs that play 
+  the game.
+- If human and LLM games give the same distances, we will transpose our 
+  questions to the distances obtained from the embeddings.
 
 ## Timeline and organisation after P2
 
