@@ -48,31 +48,29 @@ def generate_embeddings_distances(all_articles, all_distance_pairs, file_path):
     # convert the cosine similarities to a dataframe
     similarities = pd.DataFrame(similarities.items(), columns=['pair', 'cosine_similarity'])
 
-    # we now try another model to calculate the similarity between two articles
+    # we now try a SBERT model to calculate the similarity between two articles
     from sentence_transformers import SentenceTransformer, util
     model = SentenceTransformer('all-MiniLM-L6-v2')
 
-    def calculate_sbert_similarity(embedding1, embedding2):
+    def calculate_sbert_similarity(title1, title2):
+        # Get embeddings
+        embedding1 = model.encode(title1, convert_to_tensor=True)
+        embedding2 = model.encode(title2, convert_to_tensor=True)
+        # Calculate cosine similarity using SBERT's util function
         similarity = util.pytorch_cos_sim(embedding1, embedding2).item()
         return similarity
 
-    # get the embeddings of all articles and store them in a dictionary
-    article_embeddings = {}
-    for article in all_articles:
-        article_embeddings[article] = model.encode(title1, convert_to_tensor=True)
 
-    # calculate the cosine similarity between all pairs of articles
-    similarities_sbert = {}
+    # Calculate SBERT similarities for all pairs
+    sbert_similarities = {}
     for pair in all_distance_pairs:
         title1 = pair[0]
         title2 = pair[1]
-        embedding1 = article_embeddings[title1]
-        embedding2 = article_embeddings[title2]
-        similarity =  calculate_sbert_similarity(embedding1, embedding2)
-        similarities_sbert[(title1, title2)] = similarity
+        similarity = calculate_sbert_similarity(title1, title2)
+        sbert_similarities[(title1, title2)] = similarity
 
     # add a new column to the dataframe with the SBERT cosine similarities
-    similarities['sbert_cosine_similarity'] = similarities['pair'].apply(lambda x: similarities_sbert[x])
+    similarities['sbert_cosine_similarity'] = similarities['pair'].apply(lambda x: sbert_similarities[x])
 
     # now compute the Euclidean distances
 
