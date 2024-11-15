@@ -1,5 +1,5 @@
 python-dotenv
-pytorch
+torch
 scikit-learn
 sentence-transformers
 pandas
