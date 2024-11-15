@@ -7,14 +7,14 @@
 #### **Data Familiarization and Preprocessing**
 - [X] **Data Loading**: Successfully load all relevant datasets for the project.
 - [ ] **Data Exploration**:
-  - [ ] Check data formats, data types, and distributions.
-  - [ ] Identify missing values or inconsistencies.
-  - [ ] Analyze data size and ensure you can handle it.
+  - [x] Check data formats, data types, and distributions.
+  - [x] Identify missing values or inconsistencies.
+  - [x] Analyze data size and ensure you can handle it.
   - [ ] Compute descriptive statistics for key variables (mean, median, mode, standard deviation, etc.).
   - [ ] Explore correlations, patterns, and relationships within the data.
 - [ ] **Data Preprocessing**:
-  - [ ] Clean and preprocess the data (handling missing values, correcting errors, etc.).
-  - [ ] Consider data filtering, enrichment, and transformations needed for analysis.
+  - [x] Clean and preprocess the data (handling missing values, correcting errors, etc.).
+  - [x] Consider data filtering, enrichment, and transformations needed for analysis.
   - [ ] Document all preprocessing steps in a Jupyter notebook.
 
 #### **Project Goals and Analysis Plan**
@@ -22,7 +22,7 @@
 - [ ] **Methods Outline**:
   - [X] Specify the methods and techniques you plan to use, including essential mathematical details.
   - [ ] Include alternative approaches considered and explain why they were dropped.
-  - [ ] Ensure your proposed plan for analysis and data handling is reasonable and well-documented.
+  - [x] Ensure your proposed plan for analysis and data handling is reasonable and well-documented.
   - [X] Create a timeline of major project milestones.
 
 #### **Code and Documentation Quality**
