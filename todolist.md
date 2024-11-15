@@ -6,16 +6,16 @@
 
 #### **Data Familiarization and Preprocessing**
 - [X] **Data Loading**: Successfully load all relevant datasets for the project.
-- [ ] **Data Exploration**:
+- [x] **Data Exploration**:
   - [x] Check data formats, data types, and distributions.
   - [x] Identify missing values or inconsistencies.
   - [x] Analyze data size and ensure you can handle it.
-  - [ ] Compute descriptive statistics for key variables (mean, median, mode, standard deviation, etc.).
-  - [ ] Explore correlations, patterns, and relationships within the data.
-- [ ] **Data Preprocessing**:
+  - [x] Compute descriptive statistics for key variables (mean, median, mode, standard deviation, etc.).
+  - [x] Explore correlations, patterns, and relationships within the data.
+- [x] **Data Preprocessing**:
   - [x] Clean and preprocess the data (handling missing values, correcting errors, etc.).
   - [x] Consider data filtering, enrichment, and transformations needed for analysis.
-  - [ ] Document all preprocessing steps in a Jupyter notebook.
+  - [x] Document all preprocessing steps in a Jupyter notebook.
 
 #### **Project Goals and Analysis Plan**
 - [X] **Research Questions**: Clearly outline the research questions to address.
@@ -30,10 +30,10 @@
   - [X] Use the recommended GitHub template for your repository.
   - [X] Keep a clean and consistent structure for your project (folders for data, notebooks, scripts, etc.).
   - [X] Store the main analysis logic in scripts/modules separate from the notebook.
-- [ ] **Code Quality**:
-  - [ ] Ensure the code is clear, efficient, and well-documented.
-  - [ ] Include comments and explanations for complex or critical code sections.
-  - [ ] Follow best practices for coding (naming conventions, modularity, etc.).
+- [x] **Code Quality**:
+  - [x] Ensure the code is clear, efficient, and well-documented.
+  - [x] Include comments and explanations for complex or critical code sections.
+  - [x] Follow best practices for coding (naming conventions, modularity, etc.).
 - [X] **Version Control**: Use GitHub for version control with clear and regular commits.
 
 #### **Deliverables Preparation**
@@ -45,18 +45,18 @@
   - [X] **Methods**: Briefly describe the analytical methods you plan to use.
   - [X] **Proposed Timeline**: Outline key project milestones and timeline.
   - [ ] **Organization**: Define internal team roles and responsibilities.
-  - [ ] **Questions for TAs (Optional)**: List any questions for teaching assistants.
-- [ ] **Jupyter Notebook**:
+  - [x] **Questions for TAs (Optional)**: List any questions for teaching assistants.
+- [x] **Jupyter Notebook**:
   - [X] Include all initial analyses, data exploration, preprocessing steps, and findings.
-  - [ ] Ensure the notebook is well-formatted with clear section headings and explanations.
-  - [ ] Visualize key insights from the data (charts, graphs, etc.).
+  - [x] Ensure the notebook is well-formatted with clear section headings and explanations.
+  - [x] Visualize key insights from the data (charts, graphs, etc.).
 
 #### **GitHub Repository Requirements**
 - [X] **Repository Setup**:
   - [X] Create a public GitHub repository under the [epfl-ada GitHub organization](https://github.com/epfl-ada).
   - [X] Follow the repository naming convention: `ada-2023-project-`.
-- [ ] **Data Handling Pipeline**:
-  - [ ] Implement and document a complete data preprocessing pipeline.
+- [x] **Data Handling Pipeline**:
+  - [x] Implement and document a complete data preprocessing pipeline.
   - [X] Include any additional scripts or modules needed for the analysis.
 - [ ] **Notebook Submission**:
   - [X] Ensure that the primary Jupyter notebook is present and contains all initial analyses and findings.
