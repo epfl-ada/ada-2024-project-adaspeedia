@@ -164,3 +164,8 @@ folder, because they were expensive to compute.
 └── README.md
 ```
 
+## Run LLM games
+
+```
+python src/scripts/run_llm_games.py --start_line 1000 --num_items 3 --start_run_id 0
+```
