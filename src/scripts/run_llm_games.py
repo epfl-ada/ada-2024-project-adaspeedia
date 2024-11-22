@@ -34,6 +34,7 @@ parser = argparse.ArgumentParser(description='Navigate Wikipedia paths using an 
 parser.add_argument('--start_line', type=int, default=0, help='Starting line in paths_finished')
 parser.add_argument('--num_items', type=int, default=10, help='Number of items to process')
 parser.add_argument('--start_run_id', type=int, default=0, help='Starting run_id (default: 0)')
+parser.add_argument('--verbose', action='store_true', default=False, help='Print verbose output')
 args = parser.parse_args()
 
 start_line = args.start_line
@@ -83,7 +84,8 @@ for index, row in paths_finished.iloc[start_line:].iterrows():
             break
 
         print(f"Step {steps}: {current_article}")
-        print(f"Available links: {', '.join(linked_articles)}")
+        if args.verbose:
+            print(f"Available links: {', '.join(linked_articles)}")
 
         # Prepare the prompt for the LLM
         prompt = f"You are navigating Wikipedia from '{start_article}' to '{end_article}'.\n" \
