@@ -1,17 +1,17 @@
-import os
+import argparse
 from dotenv import load_dotenv
 import pandas as pd
-import argparse
-import time
-from mistralai import Mistral
 from openai import OpenAI
+import time
+import os
 
 # Load environment variables from .env file
-load_dotenv("variables.env")
+load_dotenv()
 
-# get the API key from the environment variable
-api_key_mistral = os.getenv("MISTRALAI_API_KEY")
-api_key_openai = os.getenv("OPENAI_API_KEY")
+# Retrieve the API key from environment variables
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+)
 
 DATA_FOLDER = 'data/wikispeedia_paths-and-graph/'
 
@@ -23,8 +23,8 @@ paths_finished = pd.read_csv(DATA_FOLDER + 'paths_finished.tsv', sep='\t', skipr
 links_dict = links.groupby('linkSource')['linkTarget'].apply(list).to_dict()
 
 # Load or initialize output data structures
-choices_file = '../../data/llm_choices_mistral_1.tsv'
-paths_file = '../../data/llm_paths_mistral_1.tsv'
+choices_file = '../../data/llm_choices.tsv'
+paths_file = '../../data/llm_paths.tsv'
 
 llm_choices_df = pd.read_csv(choices_file, sep='\t') if os.path.exists(choices_file) else pd.DataFrame(columns=['run_id', 'article', 'links', 'link_chosen'])
 llm_paths_df = pd.read_csv(paths_file, sep='\t') if os.path.exists(paths_file) else pd.DataFrame(columns=['run_id', 'steps', 'path'])
@@ -34,25 +34,11 @@ parser = argparse.ArgumentParser(description='Navigate Wikipedia paths using an 
 parser.add_argument('--start_line', type=int, default=0, help='Starting line in paths_finished')
 parser.add_argument('--num_items', type=int, default=10, help='Number of items to process')
 parser.add_argument('--start_run_id', type=int, default=0, help='Starting run_id (default: 0)')
-parser.add_argument('--llm', type=str, default="OPENAI", help='Choose your llm either OPENAI or MISTRALAI (default: OPENAI)')
 args = parser.parse_args()
 
 start_line = args.start_line
 num_items = args.num_items
 run_id = args.start_run_id
-llm = args.llm
-
-if llm == "OPENAI":
-    client = OpenAI(
-        api_key=api_key_openai,
-    )
-    model = 'gpt-4o-mini'
-elif llm == "MISTRALAI":
-    client = Mistral(
-        api_key=api_key_mistral,
-    )
-    model = "mistral-large-2407"
-
 
 print("Starting navigation...")
 
@@ -105,33 +91,20 @@ for index, row in paths_finished.iloc[start_line:].iterrows():
                  f"Available links: {', '.join(linked_articles)}.\n" \
                  f"Which article would you like to visit next? Respond only with the article name."
 
-        # Call the MistralAI API 
-        if llm == "MISTRALAI":
-            chat_completion = client.chat.complete(
-                model=model,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=10,
-                temperature=0,
-                n=1
-            )
-        elif llm == "OPENAI":
-            chat_completion = client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=10,
-                temperature=0,
-                n=1
-            )
-      
+        # Call the OpenAI API
+        chat_completion = client.chat.completions.create(
+            model='gpt-4o-mini',
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=10,
+            temperature=0,
+            n=1
+        )
 
         # Extract the LLM's choice
         choice = chat_completion.choices[0].message.content
-        if llm == "MISTRALAI":
-            time.sleep(20)
+
         # Validate the choice
         if choice not in linked_articles:
             print(f"Invalid choice '{choice}' made by the LLM. Appending WRONG_ANSWER.")
@@ -162,11 +135,8 @@ for index, row in paths_finished.iloc[start_line:].iterrows():
             break
         visited_articles.add(current_article)
 
-        # To comply with MistralAI rate limits
-        if llm == "MISTRALAI":  
-            time.sleep(30)
-        elif llm == "OPENAI":
-            time.sleep(1)
+        # To comply with OpenAI rate limits
+        time.sleep(1)
 
     # Record the path taken
     llm_paths_df = pd.concat([llm_paths_df, pd.DataFrame({
@@ -191,4 +161,3 @@ print(f"Skipped items: {skipped_count}")
 print(f"Total lines handled: {processed_count + skipped_count}")
 print(f"So next time, start at line: {processed_count + skipped_count + start_line}")
 print(f"With run_id: {run_id + 1}")
-print(f"LLM used: {llm}")
