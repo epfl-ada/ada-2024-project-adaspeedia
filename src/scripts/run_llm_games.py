@@ -35,6 +35,7 @@ parser.add_argument('--start_line', type=int, default=0, help='Starting line in 
 parser.add_argument('--num_items', type=int, default=10, help='Number of items to process')
 parser.add_argument('--start_run_id', type=int, default=0, help='Starting run_id (default: 0)')
 parser.add_argument('--verbose', action='store_true', default=False, help='Print verbose output')
+parser.add_argument('--memory', action='store_true', default=False, help='Include visited history in LLM prompt')
 args = parser.parse_args()
 
 start_line = args.start_line
@@ -88,10 +89,17 @@ for index, row in paths_finished.iloc[start_line:].iterrows():
             print(f"Available links: {', '.join(linked_articles)}")
 
         # Prepare the prompt for the LLM
-        prompt = f"You are navigating Wikipedia from '{start_article}' to '{end_article}'.\n" \
-                 f"Currently at '{current_article}'.\n" \
-                 f"Available links: {', '.join(linked_articles)}.\n" \
-                 f"Which article would you like to visit next? Respond only with the article name."
+        if args.memory:
+            prompt = f"You are navigating Wikipedia from '{start_article}' to '{end_article}'.\n" \
+                     f"Path taken so far: {' -> '.join(path_taken)}.\n" \
+                     f"Currently at '{current_article}'.\n" \
+                     f"Available links: {', '.join(linked_articles)}.\n" \
+                     f"Which article would you like to visit next? Respond only with the article name."
+        else:
+            prompt = f"You are navigating Wikipedia from '{start_article}' to '{end_article}'.\n" \
+                     f"Currently at '{current_article}'.\n" \
+                     f"Available links: {', '.join(linked_articles)}.\n" \
+                     f"Which article would you like to visit next? Respond only with the article name."
 
         # Call the OpenAI API
         chat_completion = client.chat.completions.create(
