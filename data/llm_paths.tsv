@@ -498,7 +498,8 @@ path_id	steps	path
 1496	6	Anaconda;South_America;Latin_America;Civilization;Technology;Computer;Computer_and_video_games
 1497	2	Anaconda;Argentina;Japan
 1498	0	Anaconda;South_America;Anaconda;LOOP_DETECTED
-1499	0	Anaconda;South_America;Anaconda;LOOP_DETECTED1000	5	Al_Jazeera;Middle_East;United_Kingdom;Canada;Pacific_Ocean;Australia
+1499	0	Anaconda;South_America;Anaconda;LOOP_DETECTED
+1000	5	Al_Jazeera;Middle_East;United_Kingdom;Canada;Pacific_Ocean;Australia
 1001	0	Al_Jazeera;United_Kingdom;England;British_Empire;United_Kingdom;LOOP_DETECTED
 1002	3	Al_Jazeera;Middle_East;India;Indian_independence_movement
 1003	0	Al_Jazeera;Doha;Qatar;Doha;LOOP_DETECTED
