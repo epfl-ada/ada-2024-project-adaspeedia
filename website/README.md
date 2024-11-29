@@ -3,11 +3,8 @@ At each commit, build is done and published here : adaspeedia.pages.dev
 ## ⚡ Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/agentc-app/astro-shadcn.git
-
-# Navigate to project
-cd astro-shadcn
+# Navigate to the website dir
+cd website
 
 # Install dependencies
 npm install
