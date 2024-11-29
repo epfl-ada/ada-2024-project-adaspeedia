@@ -1,5 +1,5 @@
 
-# How do the semantic distances elicited from LLMs using the Wikispeedia measure of relatedness compare to the ones computed from human games?
+# Ready Player LLM: How do the semantic distances elicited from LLMs using the Wikispeedia measure of relatedness compare to the ones computed from human games?
 
 ## Abstract
 
