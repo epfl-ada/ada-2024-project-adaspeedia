@@ -136,7 +136,7 @@ for index, row in paths_finished.iloc[start_line:].iterrows():
     processed_count += 1
 
 # Save the results to TSV files, appending new rows
-llm_paths_df.to_csv(paths_file, sep='\t', index=False, mode='a', header=not os.path.exists(paths_file))
+llm_paths_df.to_csv(paths_file, sep='\t', index=False, mode='w', header=True)
 
 # Log summary
 total_lines = processed_count
