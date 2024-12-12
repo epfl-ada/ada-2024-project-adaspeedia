@@ -3,3 +3,11 @@ layout: ../layouts/TextLayout.astro
 title: The story
 description: 
 ---
+
+# Plotly Chart in Astro
+
+Here is a Plotly chart embedded in an Astro page:
+
+import PlotlyChart from '../components/charts/TestChart.jsx';
+
+<PlotlyChart client:only="react"/>
