@@ -17,7 +17,14 @@ DATA_FOLDER = 'data/wikispeedia_paths-and-graph/'
 
 # Read the data files
 links = pd.read_csv(DATA_FOLDER + 'links.tsv', sep='\t', skiprows=11, names=['linkSource', 'linkTarget'])
+
+#Changes 13.12: paths_finished now refers to the section of paths_finished where there were loops. 
 paths_finished = pd.read_csv('data/paths_finished_unique.tsv', sep='\t', skiprows=1, names=['path_id', 'hashedIpAddress', 'timestamp', 'durationInSec', 'path', 'rating'])
+paths_finished_llm = pd.read_csv('data/llm_paths_all_gpt4omini_no_memory.tsv', sep='\t', skiprows=1, names=['path_id', 'steps', 'path'])
+mask_loops = (paths_finished_llm['path'].apply(lambda s: s.split(';')[-1] == 'LOOP_DETECTED'))
+#quick fix car nous n'avons pas encore compute tous les llm paths (il y en a 28718 à compute au total et non 27501). Nous les computerons avec le reste des loops.
+mask_loops = pd.concat([mask_loops, pd.Series(True, index=range(27501,28718))], axis = 0)
+paths_finished = paths_finished[mask_loops]
 
 # Prepare the links dictionary for fast lookup
 links_dict = links.groupby('linkSource')['linkTarget'].apply(list).to_dict()
