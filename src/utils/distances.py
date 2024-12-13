@@ -1,5 +1,5 @@
 import numpy as np
-import pandas as pd
+import pickle
 from collections import defaultdict
 
 
@@ -66,53 +66,61 @@ def __build_transition_matrix(links):
     return M, nodes
 
 
-def compute_distances(links, probs_posterior, paths_homing_in, proportion: float = 0.2):
+def compute_distances(links, probs_posterior, paths_homing_in, file_path: str, proportion: float = 1.0):
     """
     Compute the path-independent distances for all pairs of articles for which it is possible, as per the
     equations (3) and (4) of the Wikispeedia paper.
     """
 
-    M, nodes =  __build_transition_matrix(links)
-    ranks = __pagerank(M)
+    try:
+        with open(file_path, 'rb') as file:
+            distances = pickle.load(file)
+        dd = defaultdict(lambda: -1)
+        dd.update(distances)
+        return dd
+    except FileNotFoundError:
+        M, nodes =  __build_transition_matrix(links)
+        ranks = __pagerank(M)
 
-    # Properties that were tested and validated: every rank is inferior to 1, the sum of all ranks is 1
-    pagerank_scores = dict(zip(nodes, ranks))
+        # Properties that were tested and validated: every rank is inferior to 1, the sum of all ranks is 1
+        pagerank_scores = dict(zip(nodes, ranks))
 
-    # Initialize the distances matrix
-    nodes = np.unique(links[['linkSource', 'linkTarget']].values.flatten())
-    distances_counts = defaultdict(int) # used in computing the average of path distances
-    distances = defaultdict(int) # Interface: distances[article1][article2] = d(article1, article2)
+        distances_counts = defaultdict(int) # used in computing the average of path distances
+        distances = defaultdict(int) # Interface: distances[article1][article2] = d(article1, article2)
 
-    def compute_path_distance(i, path):
-        goal = path[-1]
-        sum_p = 0
-        for j in range(i, len(path) - 1):
-            if probs_posterior[goal][path[j]][path[j+1]] == 0:
-                print(f'{goal=}, {path[j]=}, {path[j+1]=}')
-                continue
-            sum_p -= np.log(probs_posterior[goal][path[j]][path[j+1]])
-        return sum_p / -np.log(pagerank_scores[goal])
+        def compute_path_distance(i, path):
+            goal = path[-1]
+            sum_p = 0
+            for j in range(i, len(path) - 1):
+                if probs_posterior[goal][path[j]][path[j+1]] == 0:
+                    print(f'{goal=}, {path[j]=}, {path[j+1]=}')
+                    continue
+                sum_p -= np.log(probs_posterior[goal][path[j]][path[j+1]])
+            return sum_p / -np.log(pagerank_scores[goal])
 
-    # Fill in distances without normalization and distances_count for one path
-    def distances_along_path(path):
-        goal = path[-1]
-        for i in range(0, len(path) - 1): # len(path) - 1: We don't consider the distance from the goal to itself
-            if path[i] not in links['linkSource'].values or goal not in links['linkSource'].values:
-                continue
-            distances[(goal, path[i])] += compute_path_distance(i, path)
-            distances_counts[(goal, path[i])] += 1
-        return path
+        # Fill in distances without normalization and distances_count for one path
+        def distances_along_path(path):
+            goal = path[-1]
+            for i in range(0, len(path) - 1): # len(path) - 1: We don't consider the distance from the goal to itself
+                if path[i] not in links['linkSource'].values or goal not in links['linkSource'].values:
+                    continue
+                distances[(goal, path[i])] += compute_path_distance(i, path)
+                distances_counts[(goal, path[i])] += 1
+            return path
 
-    # Compute the distances and distances_counts matrix by passing through all the paths and incrementing the two matrices accordingly
-    stop = int(len(paths_homing_in) * proportion)
-    for path in paths_homing_in[:stop]:
-        distances_along_path(path)
+        # Compute the distances and distances_counts matrix by passing through all the paths and incrementing the two matrices accordingly
+        stop = int(len(paths_homing_in) * proportion)
+        for path in paths_homing_in[:stop]:
+            distances_along_path(path)
 
-    # Normalize the distances according to the number of occurrences of given distance in the paths
-    for key in distances:
-        distances[key] /= distances_counts[key]
+        # Normalize the distances according to the number of occurrences of given distance in the paths
+        for key in distances:
+            distances[key] /= distances_counts[key]
 
-    # Put every undefined distance to a negative value.
-    distances.default_factory = lambda: -1
+        # Put every undefined distance to a negative value.
+        distances.default_factory = lambda: -1
 
-    return distances
+        with open(file_path, 'wb') as file:
+            pickle.dump(dict(distances), file)
+
+        return distances
