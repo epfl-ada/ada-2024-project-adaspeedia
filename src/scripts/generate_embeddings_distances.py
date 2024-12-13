@@ -20,7 +20,7 @@ def get_embeddings_distances(all_articles, all_distance_pairs, file_path):
     try:
         return pd.read_csv(file_path, converters={'pair': ast.literal_eval})
     except FileNotFoundError:
-        generate_embeddings_distances(all_articles, all_distance_pairs, file_path)
+        return generate_embeddings_distances(all_articles, all_distance_pairs, file_path)
 
 def generate_embeddings_distances(all_articles, all_distance_pairs, file_path):
     """

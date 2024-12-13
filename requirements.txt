@@ -1,5 +1,5 @@
 python-dotenv
-torch
+pytorch
 scikit-learn
 sentence-transformers
 pandas
@@ -11,4 +11,4 @@ jupyterlab
 matplotlib
 scipy
 transformers
-statsmodel
+statsmodels

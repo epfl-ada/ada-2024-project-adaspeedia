@@ -66,7 +66,7 @@ def __build_transition_matrix(links):
     return M, nodes
 
 
-def compute_distances(links, probs_posterior, paths_homing_in):
+def compute_distances(links, probs_posterior, paths_homing_in, proportion: float = 0.2):
     """
     Compute the path-independent distances for all pairs of articles for which it is possible, as per the
     equations (3) and (4) of the Wikispeedia paper.
@@ -94,7 +94,7 @@ def compute_distances(links, probs_posterior, paths_homing_in):
         return sum_p / -np.log(pagerank_scores[goal])
 
     # Fill in distances without normalization and distances_count for one path
-    def path_distances_traversal(path):
+    def distances_along_path(path):
         goal = path[-1]
         for i in range(0, len(path) - 1): # len(path) - 1: We don't consider the distance from the goal to itself
             if path[i] not in links['linkSource'].values or goal not in links['linkSource'].values:
@@ -104,7 +104,9 @@ def compute_distances(links, probs_posterior, paths_homing_in):
         return path
 
     # Compute the distances and distances_counts matrix by passing through all the paths and incrementing the two matrices accordingly
-    paths_homing_in.apply(path_distances_traversal)
+    stop = len(paths_homing_in) // proportion
+    for path in paths_homing_in[:stop]:
+        distances_along_path(path)
 
     # Normalize the distances according to the number of occurrences of given distance in the paths
     for key in distances:
