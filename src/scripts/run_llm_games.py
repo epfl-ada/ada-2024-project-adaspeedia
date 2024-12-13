@@ -83,7 +83,7 @@ for index, row in paths_finished.iloc[start_line:].iterrows():
         # Prepare the prompt for the LLM
         if args.memory:
             prompt = f"You are navigating Wikipedia from '{start_article}' to '{end_article}'.\n" \
-                     f"These are the articles that you visited so far and that you should avoid visiting again: {' -> '.join(path_taken)}.\n" \
+                     f"You should not visit one of the articles that you have already visited: {' -> '.join(path_taken)}.\n" \
                      f"Currently at '{current_article}'.\n" \
                      f"Available links: {', '.join(linked_articles)}.\n" \
                      f"Which article would you like to visit next? Respond only with the article name."
