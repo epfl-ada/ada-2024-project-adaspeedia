@@ -104,7 +104,7 @@ def compute_distances(links, probs_posterior, paths_homing_in, proportion: float
         return path
 
     # Compute the distances and distances_counts matrix by passing through all the paths and incrementing the two matrices accordingly
-    stop = len(paths_homing_in) // proportion
+    stop = int(len(paths_homing_in) * proportion)
     for path in paths_homing_in[:stop]:
         distances_along_path(path)
 

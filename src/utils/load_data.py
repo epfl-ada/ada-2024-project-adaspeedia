@@ -32,7 +32,8 @@ def load_data():
     # Remove loops and wrong answers from llm data
     mask_loops = (paths_finished_llm['path'].apply(lambda s: s[-1] == 'LOOP_DETECTED'))
     mask_wrong_answers = (paths_finished_llm['path'].apply(lambda s: s[-1] == 'WRONG_ANSWER'))
-    mask_valid_finished_paths = ~(mask_loops | mask_wrong_answers)
+    mask_no_link = (paths_finished_llm['path'].apply(lambda s: s[-1] == 'NO_LINK'))
+    mask_valid_finished_paths = ~(mask_loops | mask_wrong_answers | mask_no_link)
 
     paths_finished_llm = paths_finished_llm[mask_valid_finished_paths]['path']
     # we need to keep the path_id to identify the starting and goal articles.
