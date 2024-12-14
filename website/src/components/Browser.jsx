@@ -26,9 +26,9 @@ const PathDropdownSearch = () => {
     const fetchPaths = async () => {
       try {
         const [humanResponse, llmResponse, llmMemoryResponse] = await Promise.all([
-          fetch('data/paths_human_unique_cleaned.json'),
-          fetch('data/paths_llm_unique_cleaned.json'),
-          fetch('data/paths_llm_memory_unique_cleaned.json'),
+          fetch('/data/paths_human_unique_cleaned.json'),
+          fetch('/data/paths_llm_unique_cleaned.json'),
+          fetch('/data/paths_llm_memory_unique_cleaned.json'),
         ]);
 
         const humanData = await humanResponse.json();
