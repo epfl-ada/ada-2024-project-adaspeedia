@@ -3,10 +3,11 @@ import { cn } from '@/lib/utils'
 import { ModeToggle } from '@/components/ModeToggle'
 import { 
   Home,
-  FileText,
-  Scale,
   LayoutPanelTop,
   Menu,
+  Users,
+  Github,
+  BookOpenText,
   type LucideIcon 
 } from 'lucide-react'
 import { useStore } from '@nanostores/react'
@@ -14,8 +15,9 @@ import { layoutStore, setLayout, type LayoutType } from '@/stores/layout'
 
 const icons: Record<string, LucideIcon> = {
   Home,
-  FileText,
-  Scale,
+  Users,
+  Github,
+  BookOpenText,
 }
 
 interface SidebarProps {
