@@ -11,6 +11,10 @@ const PathDropdownSearch = () => {
   const [filteredEnds, setFilteredEnds] = useState([]);
   const [selectedEnd, setSelectedEnd] = useState(null);
 
+  // State to display results
+  const [resultPathIds, setResultPathIds] = useState([]);
+  const [resultFullPath, setResultFullPath] = useState('');
+
   // Fetch data from the provided URL
   useEffect(() => {
     const fetchPaths = async () => {
@@ -47,6 +51,8 @@ const PathDropdownSearch = () => {
     const ends = [...new Set(matchingPaths.map(({ end }) => end))];
     setFilteredEnds(ends.map((end) => ({ value: end, label: end })));
     setSelectedEnd(null); // Reset end selection when start changes
+    setResultPathIds([]);
+    setResultFullPath('');
   };
 
   const handleEndChange = (selectedOption) => {
@@ -59,7 +65,11 @@ const PathDropdownSearch = () => {
         article.start === selectedStart?.value && article.end === selectedEnd?.value
     );
 
-    alert(`Matching Path IDs: ${matchingPaths.map((p) => p.path_id).join(', ')}`);
+    const pathIds = matchingPaths.map((p) => p.path_id);
+    const fullPath = matchingPaths.length > 0 ? matchingPaths[0].fullPath.join(' → ') : '';
+
+    setResultPathIds(pathIds);
+    setResultFullPath(fullPath);
   };
 
   return (
@@ -87,9 +97,16 @@ const PathDropdownSearch = () => {
         />
       </div>
 
-      <button onClick={findPathIds} disabled={!selectedStart || !selectedEnd}>
-        Find Path ID
+      <button onClick={findPathIds} disabled={!selectedStart || !selectedEnd} style={{ marginTop: '20px' }}>
+        Analyse this path
       </button>
+
+      {resultPathIds.length > 0 && (
+        <div style={{ marginTop: '20px' }}>
+          <p><strong>(Internal) Path ID:</strong> {resultPathIds.join(', ')}</p>
+          <p><strong>Full Path:</strong> {resultFullPath}</p>
+        </div>
+      )}
     </div>
   );
 };
