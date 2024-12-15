@@ -4,66 +4,22 @@ title: The story
 description: 
 ---
 
+In a world where humanity must rebuild from the ashes, games may seem like a trivial pursuit. Yet, in the aftermath of the apocalypse, our mission at the **Applied Digital Anthropology (ADA)** department of the New Age government is anything but trivial. Tasked with restoring the essence of human civilization, we’ve turned to an unexpected cornerstone of human experience: games.
 
-# Example of plotting a chart with plotly
+Our team is exploring how machines can simulate human cognition and strategies to help shape the future of this planet. Why games? Because they encapsulate problem-solving, strategic thinking, and creativity — traits essential for humanity’s survival and progress. To this end, we’ve embarked on a case study of [**Wikispeedia**](https://dlab.epfl.ch/wikispeedia/play/), a game that challenges players to navigate Wikipedia’s web of articles from one topic to another using only hyperlinks. Simple, yet deeply revealing of how humans connect concepts, prioritize paths, and think under constraints.
 
-Here is a Plotly chart embedded in an Astro page:
+## Meet the Team
+- **Dr. A. I.** - Our lead researcher, a brilliant mind in the field of artificial intelligence and human cognition.
+- **Dr. E. M.** - Our resident expert in game theory and human psychology.
+- **Dr. L. O.** - Our data scientist, who wrangles the vast amounts of data we collect from Wikispeedia.
+- **Dr. R. O.** - Our game designer, who crafts the challenges that players face in Wikispeedia.
+- **Dr. S. T.** - Our anthropologist, who studies the social dynamics of Wikispeedia players.
 
-import PlotlyChart from '../components/charts/TestChart.jsx';
+Together, we form **ADAspeedia**, a team united in exploring how machines can emulate and evolve human behavior. To discover the team members' individual stories, click [here](/team).
 
-<PlotlyChart client:only="react"/>
+# A Human Blueprint
+To recreate human-like behavior, we first need to understand how humans played Wikispeedia. What strategies did they use? Did they wander aimlessly or systematically? How did they balance the exploration of diverse topics with the focused goal of reaching their destination? These questions guided our initial analysis of the human dataset, revealing the intricacies of the paths taken, the cognitive shortcuts employed, and the common hurdles encountered.
 
-
-# Introduction
-
-For now, this is just a structure. The items are listed in a logical order but not yet woven into a cohesive story.
-
-# About our dataset
-- Wikispeedia
-- We build a dataset of LLM games (justify why)
-- We extracted the embeddings from another foundational model (justify why, and can we compare the embedding distances of this model (BERT) with the semantic distances extracted from the games of another model (gpt) ?)
-
-# Equivalent of the 'Statistics cookbook' from Radatouille if need be 
-
-
-# How does the LLM play the game ?
-- The problems we have and the solutions we choosed. How we solved the problem with the loop by adding memory.
-- Verify that the paths with and without memory do not vary much. We can select a subsample of 100 (or another number if you find one more fitting) pairs of starting and goal articles, and run paths through them 1) without memory 2) with memory, multiple times to see how much they vary (we do it multiple times to get rid of the variance induced by the temperature of the LLM without having to set the LLM at a low temperature.).
-{/*It may be too complex to explain that on the notebook, we don't need to show all the details but should we mention it ? As a reader I would care for this as else the data might not be reliable.*/}
-- Now that we know that the LLM plays the same way with and without memory, we can say that we computed again the runs that looped with memory and reached a better path completion rate (from 43% loop failures to x% failure among the newly computed paths)
-- Do LLMs use the same strategy of getting away and then homing in ? Question 2.
-- Question 3. We observed that... 
-
-
-# How does the LLM associate concepts compared to humans ?
-- Verify that the variance of the the distances computed through different LLM runs is 'low enough'.
-- Question 1
-- If we find differences, we go through different hypotheses, among which: Question 4
-- Lastly, Question 5. Is the Wikispeedia semantic measure redundant with the embedding distance between words/concepts ? todo or should we put it in another section ?
-
-{/*
-## Subheading
-
-- Bullet point 1
-- Bullet point 2
-  - Nested bullet point
-
-1. Ordered list item 1
-2. Ordered list item 2
-
-**Bold text**  
-*Italic text*  
-~~Strikethrough~~
-
-> This is a blockquote.
-
-[Link to Google](https://google.com)
-
-`Inline code` and:
-
-```javascript
-// Code blocks
-console.log('Hello, MDX!'); 
-```
-*/}
-
+For this, we have data extracted from the Previous Age. A team of researchers from EPFL has collected thousands of paths taken by humans, [unified in a single dataset](https://snap.stanford.edu/data/wikispeedia.html).  
+We've analyzed it to keep only the essentials :
+- **Paths** - The sequence of articles visited by players (id & title of the articles separated by a comma).

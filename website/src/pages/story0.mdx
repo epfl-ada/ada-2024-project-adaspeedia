@@ -1,0 +1,69 @@
+---
+layout: ../layouts/TextLayout.astro
+title: The story
+description: 
+---
+
+
+# Example of plotting a chart with plotly
+
+Here is a Plotly chart embedded in an Astro page:
+
+import PlotlyChart from '../components/charts/TestChart.jsx';
+
+<PlotlyChart client:only="react"/>
+
+
+# Introduction
+
+For now, this is just a structure. The items are listed in a logical order but not yet woven into a cohesive story.
+
+# About our dataset
+- Wikispeedia
+- We build a dataset of LLM games (justify why)
+- We extracted the embeddings from another foundational model (justify why, and can we compare the embedding distances of this model (BERT) with the semantic distances extracted from the games of another model (gpt) ?)
+
+# Equivalent of the 'Statistics cookbook' from Radatouille if need be 
+
+
+# How does the LLM play the game ?
+- The problems we have and the solutions we choosed. How we solved the problem with the loop by adding memory.
+- Verify that the paths with and without memory do not vary much. We can select a subsample of 100 (or another number if you find one more fitting) pairs of starting and goal articles, and run paths through them 1) without memory 2) with memory, multiple times to see how much they vary (we do it multiple times to get rid of the variance induced by the temperature of the LLM without having to set the LLM at a low temperature.).
+{/*It may be too complex to explain that on the notebook, we don't need to show all the details but should we mention it ? As a reader I would care for this as else the data might not be reliable.*/}
+- Now that we know that the LLM plays the same way with and without memory, we can say that we computed again the runs that looped with memory and reached a better path completion rate (from 43% loop failures to x% failure among the newly computed paths)
+- Do LLMs use the same strategy of getting away and then homing in ? Question 2.
+- Question 3. We observed that... 
+
+
+# How does the LLM associate concepts compared to humans ?
+- Verify that the variance of the the distances computed through different LLM runs is 'low enough'.
+- Question 1
+- If we find differences, we go through different hypotheses, among which: Question 4
+- Lastly, Question 5. Is the Wikispeedia semantic measure redundant with the embedding distance between words/concepts ? todo or should we put it in another section ?
+
+{/*
+## Subheading
+
+- Bullet point 1
+- Bullet point 2
+  - Nested bullet point
+
+1. Ordered list item 1
+2. Ordered list item 2
+
+**Bold text**  
+*Italic text*  
+~~Strikethrough~~
+
+> This is a blockquote.
+
+[Link to Google](https://google.com)
+
+`Inline code` and:
+
+```javascript
+// Code blocks
+console.log('Hello, MDX!'); 
+```
+*/}
+
