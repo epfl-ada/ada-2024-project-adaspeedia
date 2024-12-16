@@ -46,10 +46,13 @@ const DistancePlotter = () => {
     const [distances, setDistances] = useState([]);
     const [selectedArticle, setSelectedArticle] = useState(null);
     const [linkedDistances, setLinkedDistances] = useState([]);
+    const [Plot, setPlot] = useState(null); // State for dynamically imported Plotly component
 
     useEffect(() => {
-
-        import('react-plotly.js').then((module) => setPlot(() => module.default));
+        // Dynamically import the Plotly.js module
+        import('react-plotly.js').then((module) => {
+            setPlot(() => module.default);
+        });
 
         // Fetch and parse the CSV data on component mount
         const loadCSVData = async () => {
@@ -103,25 +106,23 @@ const DistancePlotter = () => {
                 Find distances
             </button>
 
-            {linkedDistances.length > 0 && (
+            {linkedDistances.length > 0 && Plot && (
                 <div style={{ marginTop: '20px' }}>
                     <h3>Linked Articles and Distances:</h3>
                     <Plot
                         data={[
                             {
-                                x: linkedDistances.map((item) => item.linkedArticle),
-                                y: linkedDistances.map((item) => item.distance),
+                                x: linkedDistances.map((item) => item.distance),
+                                y: linkedDistances.map((item) => item.linkedArticle),
                                 type: 'scatter',
                                 mode: 'markers',
-                                marker: { color: 'blue' },
+                                marker: { color: 'black' },
                             },
                         ]}
                         layout={{
                             title: 'Distances to Selected Article',
-                            xaxis: { title: 'Linked Article' },
-                            yaxis: { title: 'Distance' },
                         }}
-                        style={{ width: '100%', height: '400px' }}
+                        style={{ width: '100%', height: '500px' }}
                     />
                 </div>
             )}
