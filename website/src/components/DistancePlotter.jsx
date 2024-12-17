@@ -46,6 +46,8 @@ const DistancePlotter = () => {
     const [distances, setDistances] = useState([]);
     const [selectedArticle, setSelectedArticle] = useState(null);
     const [linkedDistances, setLinkedDistances] = useState([]);
+    const [showArticle1, setShowArticle1] = useState(true); // Toggle for article1
+    const [showArticle2, setShowArticle2] = useState(true); // Toggle for article2
     const [Plot, setPlot] = useState(null); // State for dynamically imported Plotly component
 
     useEffect(() => {
@@ -79,6 +81,7 @@ const DistancePlotter = () => {
             const results = filteredDistances.map((d) => ({
                 linkedArticle: d.article1 === selectedArticle.value ? d.article2 : d.article1,
                 distance: d.distance,
+                type: d.article1 === selectedArticle.value ? 'article1' : 'article2',
             }));
 
             setLinkedDistances(results);
@@ -88,6 +91,11 @@ const DistancePlotter = () => {
     // Extract unique article names for the dropdown
     const articles = [...new Set(distances.flatMap((d) => [d.article1, d.article2]))];
     const articleOptions = articles.map((article) => ({ value: article, label: article }));
+
+    // Prepare plot data based on toggles
+    const filteredData = linkedDistances.filter(
+        (item) => (showArticle1 && item.type === 'article1') || (showArticle2 && item.type === 'article2')
+    );
 
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
@@ -106,21 +114,41 @@ const DistancePlotter = () => {
                 Find distances
             </button>
 
-            {linkedDistances.length > 0 && Plot && (
+            {filteredData.length > 0 && Plot && (
                 <div style={{ marginTop: '20px' }}>
                     <h3>Linked Articles and Distances:</h3>
                     <Plot
                         data={[
                             {
-                                x: linkedDistances.map((item) => item.distance),
-                                y: linkedDistances.map((item) => item.linkedArticle),
+                                x: filteredData
+                                    .filter((item) => item.type === 'article1')
+                                    .map((item) => item.distance),
+                                y: filteredData
+                                    .filter((item) => item.type === 'article1')
+                                    .map((item) => item.linkedArticle),
                                 type: 'scatter',
                                 mode: 'markers',
-                                marker: { color: 'black' },
+                                name: 'Forwards',
+                                marker: { color: 'blue' },
+                            },
+                            {
+                                x: filteredData
+                                    .filter((item) => item.type === 'article2')
+                                    .map((item) => item.distance),
+                                y: filteredData
+                                    .filter((item) => item.type === 'article2')
+                                    .map((item) => item.linkedArticle),
+                                type: 'scatter',
+                                mode: 'markers',
+                                name: 'Backwards',
+                                marker: { color: 'orange' },
                             },
                         ]}
                         layout={{
                             title: 'Distances to Selected Article',
+                            xaxis: { title: 'Distance' },
+                            yaxis: { title: 'Linked Article' },
+                            legend: { title: 'Distance Type' },
                         }}
                         style={{ width: '100%', height: '500px' }}
                     />
