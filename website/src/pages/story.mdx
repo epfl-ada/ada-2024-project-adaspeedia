@@ -23,3 +23,22 @@ To recreate human-like behavior, we first need to understand how humans played W
 For this, we have data extracted from the Previous Age. A team of researchers from EPFL has collected thousands of paths taken by humans, [unified in a single dataset](https://snap.stanford.edu/data/wikispeedia.html).  
 We've analyzed it to keep only the essentials :
 - **Paths** - The sequence of articles visited by players (id & title of the articles separated by a comma).
+
+
+# The machine's understanding of the human language
+
+Prior to our study, other methods already existed to compute the semantic distance between two words. Indeed, language models usually use a system of *word embeddings*, which is a specific representation of words and notions. An interesting point with these embeddings is that they can be visualized as high-dimensionnal vectors. They can hence be compared together with simpler comparison tools, such as cosine similarity and euclidean_distance.
+Previous studies show that the embeddings learned by models usually capture the semantic behind words. For example, as embeddings are vectors, we can add them up together. It turns out that the result of the operation 'Greece' - 'Athens' + 'Paris' yields a very similar vector to the one representing 'France'.
+We are now interested in the similarities in distribution between the difference in distances computed on paths played by humans VS our machine, and the difference in distances computed on paths played by humans VS existing human embeddings
+
+We first used a BERT classic model. BLABLABLA WHY BERT
+To do so here is our protocol:
+- Compute the distances for the paths played by humans and by our machine
+
+- Extact the pair of articles
+
+- Compute for each of the pairs the embedding of each article
+
+- Based on the embeddings, compute the cosine similarity and euclidean distance.
+
+To complement this, we also added a SBERT model. BLABLABLA WHY
