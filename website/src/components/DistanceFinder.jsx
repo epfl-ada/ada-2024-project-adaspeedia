@@ -1,120 +1,96 @@
-import React, { useState, useEffect } from 'react';
-import Select from 'react-select';
+import React, { useEffect, useRef } from "react";
+import { Sigma } from "sigma";
+import Graph from "graphology";
+import { random } from "graphology-layout";
 
-// Fetch data from the CSV file
-const fetchCSVData = async () => {
-  const response = await fetch('/data/distances_humans.csv');
-  const csvText = await response.text();
-  return csvText;
-};
-
-// Parse CSV data into a usable JSON format
-const parseCSV = (data) => {
-  const rows = data.split('\n').slice(1); // Split lines and skip the header
-  const result = rows
-    .filter((row) => row.trim() !== '') // Ignore empty rows
-    .map((row) => {
-      const [pair, distance] = row.split(/,(?=\d)/); // Split by the comma before the number
-      if (!pair || !distance) {
-        console.error(`Invalid row format: ${row}`);
-        return null;
-      }
-
-      const [article1, article2] = pair
-        .replace(/['"()]/g, '') // Remove quotes and parentheses
-        .split(', ')
-        .map((article) => article.trim()); // Trim whitespace
-
-      if (!article1 || !article2 || isNaN(parseFloat(distance))) {
-        console.error(`Invalid data in row: ${row}`);
-        return null;
-      }
-
-      return {
-        article1,
-        article2,
-        distance: parseFloat(distance),
-      };
-    })
-    .filter((entry) => entry !== null); // Filter out invalid entries
-
-  return result;
-};
-
-
-const DistanceFinder = () => {
-  const [csvData, setCsvData] = useState('');
-  const [distances, setDistances] = useState([]);
-  const [selectedArticle, setSelectedArticle] = useState(null);
-  const [linkedDistances, setLinkedDistances] = useState([]);
+const GraphVisualization = () => {
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    // Fetch and parse the CSV data on component mount
-    const loadCSVData = async () => {
-      const csvText = await fetchCSVData();
-      setCsvData(csvText);
-      const parsedDistances = parseCSV(csvText);
-      setDistances(parsedDistances);
-    };
+    async function loadGraph() {
+      try {
+        const response = await fetch('/data/links.tsv');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch data: ${response.statusText}`);
+        }
+        const text = await response.text();
 
-    loadCSVData();
+        const graph = new Graph();
+        const lines = text.trim().split("\n").slice(0, 1000);
+
+        lines.forEach((line) => {
+          const [source, target] = line.split("\t");
+
+          if (!graph.hasNode(source)) {
+            graph.addNode(source, { label: decodeURIComponent(source) });
+          }
+          if (!graph.hasNode(target)) {
+            graph.addNode(target, { label: decodeURIComponent(target) });
+          }
+
+          graph.addEdge(source, target, { type: "arrow", color: "#888", size: 1 });
+        });
+
+        // Scale nodes by degree (number of edges)
+        graph.forEachNode((node) => {
+          const degree = graph.degree(node);
+          graph.setNodeAttribute(node, "size", degree + 3); // Add 3 to avoid zero size
+          graph.setNodeAttribute(node, "color", "#666"); // Default node color
+        });
+
+        // Apply random layout
+        random.assign(graph);
+
+        // Initialize Sigma and bind hover interactions
+        if (containerRef.current) {
+          const renderer = new Sigma(graph, containerRef.current);
+
+          // Add hover interaction
+          renderer.on("enterNode", ({ node }) => {
+            // Highlight the hovered node and its edges
+            graph.updateEachNodeAttributes((n, attrs) => ({
+              ...attrs,
+              color: n === node ? 'red' : attrs.color,
+            }));
+            graph.updateEachEdgeAttributes((edge, attrs) => {
+              const [source, target] = graph.extremities(edge);
+              return {
+                ...attrs,
+                color: source === node || target === node ? 'red' : attrs.color,
+                size: source === node || target === node ? 2 : attrs.size, // Increase the size of the arrow
+              };
+            });
+            renderer.refresh(); // Update the graph display
+          });
+
+          renderer.on("leaveNode", () => {
+            // Remove highlights when mouse leaves a node
+            graph.updateEachNodeAttributes((n, attrs) => ({
+              ...attrs,
+              color: "#666", // Reset to original color
+            }));
+            graph.updateEachEdgeAttributes((edge, attrs) => ({
+              ...attrs,
+              color: "#888", // Reset to original color
+              size: 1, // Reset to original size
+            }));
+            renderer.refresh();
+          });
+        }
+      } catch (error) {
+        console.error("Error loading or processing graph data:", error);
+      }
+    }
+
+    loadGraph();
   }, []);
 
-  const handleArticleChange = (selectedOption) => {
-    setSelectedArticle(selectedOption);
-    setLinkedDistances([]); // Clear previous results
-  };
-
-  const findDistances = () => {
-    if (selectedArticle) {
-      const filteredDistances = distances.filter(
-        (d) => d.article1 === selectedArticle.value || d.article2 === selectedArticle.value
-      );
-
-      const results = filteredDistances.map((d) => ({
-        linkedArticle: d.article1 === selectedArticle.value ? d.article2 : d.article1,
-        distance: d.distance,
-      }));
-
-      setLinkedDistances(results);
-    }
-  };
-
-  // Extract unique article names for the dropdown
-  const articles = [...new Set(distances.flatMap((d) => [d.article1, d.article2]))];
-  const articleOptions = articles.map((article) => ({ value: article, label: article }));
-
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <div>
-        <label htmlFor="articleDropdown">Select Article:</label>
-        <Select
-          id="articleDropdown"
-          options={articleOptions}
-          value={selectedArticle}
-          onChange={handleArticleChange}
-          placeholder="-- Select Article --"
-        />
-      </div>
-
-      <button onClick={findDistances} style={{ marginTop: '20px' }}>
-        Find distances
-      </button>
-
-      {linkedDistances.length > 0 && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>Linked Articles and Distances:</h3>
-          <ul>
-            {linkedDistances.map((item, index) => (
-              <li key={index}>
-                {item.linkedArticle}: {item.distance.toFixed(3)}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+    <div
+      ref={containerRef}
+      style={{ width: "100%", height: "100vh" }}
+    ></div>
   );
 };
 
-export default DistanceFinder;
+export default GraphVisualization;
