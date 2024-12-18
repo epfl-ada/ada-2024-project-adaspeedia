@@ -71,8 +71,8 @@ To study the distribution of differences, we followed the following protocol:
 - Compute the difference with the distances for the paths played by humans
 
 
-![Distribution of difference between human computed distances and LLM computed distances](/src/components/charts/difference_humans_llm.png)
-![Distribution of difference between human computed distances and embeddings euclidean distance](/src/components/charts/difference_humans_euclidean.png)
+![Distribution of difference between human computed distances and LLM computed distances](/charts/difference_humans_llm.png)
+![Distribution of difference between human computed distances and embeddings euclidean distance](/charts/difference_humans_euclidean.png)
 
 For the distribution of difference between human computed and machine computed distances, we can see that the distribution of differences between human and LLM computed distances resembles a Laplace distribution, which clearly indicates a strong alignment between human and machine understanding of semantic relationships. Indeed, this is visible because the mean, median and interquartile range are all very close to 0.
 However, the distribution is still spreading a bit, suggesting that the machine may deviate a bit more from human understanding. Besides the obvious outliers previously described (English_language), the largest difference in absolute value suggest different priorities when computing the semantic difference. For example, the difference in the human distance for Canada and Japan and the machine distance shows that the machine potentially thinks more abstractly, i.e. these are two countries, hence the concepts are very similar. However, humans may give more importance to other specificities, such as the geographic distance, lack of common history themes, etc...
