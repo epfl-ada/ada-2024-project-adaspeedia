@@ -27,12 +27,11 @@ We've analyzed it to keep only the essentials :
 
 # The machine's understanding of the human language
 
-Prior to our study, other methods already existed to compute the semantic distance between two words. Indeed, language models usually use a system of *word embeddings*, which is a specific representation of words and notions. An interesting point with these embeddings is that they can be visualized as high-dimensionnal vectors. They can hence be compared together with simpler comparison tools, such as cosine similarity and euclidean_distance.
+Prior to our study, other methods already existed to compute the semantic distance between two words. Indeed, language models usually use a system of *word embeddings*, which is a specific representation of words and notions. An interesting point with these embeddings is that they can be visualized as high-dimensionnal vectors. They can hence be compared together with simpler comparison tools, such as the euclidean L2 distance.
 Previous studies show that the embeddings learned by models usually capture the semantic behind words. For example, as embeddings are vectors, we can add them up together. It turns out that the result of the operation 'Greece' - 'Athens' + 'Paris' yields a very similar vector to the one representing 'France'.
 We are now interested in the similarities in distribution between the difference in distances computed on paths played by humans VS our machine, and the difference in distances computed on paths played by humans VS existing human embeddings.
 
-We first used a Bidirectional Encoder Representations from Transformers (BERT) base model. This architecture has proven to be consistantly powerful on multiple natural language processing tasks, specifically those related to semantic understanding. Hence, it seems like the perfect fit for our model.
-To complement this, we also added a Sentence BERT (S-BERT) model. This architecture relies on the previous one but unlike it, it works on the semantic at sentence level instead of word level. As we may have multiple words in a Wikipedia article name, S-BERT might be able to capture more of the semantic similarities.
+We first used a Bidirectional Encoder Representations from Transformers (BERT) base model. This architecture has proven to be consistantly powerful on multiple natural language processing tasks, specifically those related to semantic understanding. Hence, it seems like the perfect fit for our task.
 
 To study the distribution of differences, we followed the following protocol:
 
@@ -42,13 +41,19 @@ To study the distribution of differences, we followed the following protocol:
 
 - Extact the pair of articles.
 
-- Compute for each of the pairs the BERT of each article.
+- Compute for each of the pairs the BERT embeddings of each article.
 
-- Based on the embeddings, compute the cosine similarity and euclidean distance.
+- Based on the embeddings, compute the euclidean distance between two article names.
 
-- At the same time, compute the S-BERT cosine similarity for each pair of articles.
+- Compute the difference with the distances for the paths played by humans
 
-- For each of the BERT cosine similarity, BERT euclidean distance and S-BERT cosine similarity, compute their difference with the distances for the paths played by humans
 
-Here are our results
+![Distribution of difference between human computed distances and LLM computed distances](../components/charts/difference_humans_llm.png)
+![Distribution of difference between human computed distances and embeddings euclidean distance](../components/charts/difference_humans_euclidean.png)
 
+For the distribution of difference between human computed and machine computed distances, we can see that the distribution of differences between human and LLM computed distances resembles a Laplace distribution, which clearly indicates a strong alignment between human and machine understanding of semantic relationships. Indeed, this is visible because the mean, median and interquartile range are all very close to 0.
+However, the distribution is still spreading a bit, suggesting that the machine may deviate a bit more from human understanding. Besides the obvious outliers previously described (English_language), the largest difference in absolute value suggest different priorities when computing the semantic difference. For example, the difference in the human distance for Canada and Japan and the machine distance shows that the machine potentially thinks more abstractly, i.e. these are two countries, hence the concepts are very similar. However, humans may give more importance to other specificities, such as the geographic distance, lack of common history themes, etc...
+
+Now, looking at the distribution of the difference between human computed distances and embeddings, the data looks more Gaussian, with a mean and median around -6. This means that, distances computed by humans paths are usually way lower than the ones computed by humans, showing discrepancy in the understanding of the human language.
+
+Therefore, we can overall conclude that our machine aligns more with humans in the distance computed based on the paths it plays, hence it mimics the human behavior as expected.
