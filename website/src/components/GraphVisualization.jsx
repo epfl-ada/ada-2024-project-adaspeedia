@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Sigma } from "sigma";
 import Graph from "graphology";
 import { random } from "graphology-layout";
 
 const GraphVisualization = () => {
     const containerRef = useRef(null);
-    const [graph, setGraph] = useState(new Graph());
-    const [searchQuery, setSearchQuery] = useState("");
-    const [depth, setDepth] = useState(1);
 
     useEffect(() => {
         async function loadGraph() {
@@ -44,9 +41,42 @@ const GraphVisualization = () => {
                 // Apply random layout
                 random.assign(graph);
 
-                setGraph(graph);
-                renderGraph(graph);
+                // Initialize Sigma and bind hover interactions
+                if (containerRef.current) {
+                    const renderer = new Sigma(graph, containerRef.current);
 
+                    // Add hover interaction
+                    renderer.on("enterNode", ({ node }) => {
+                        // Highlight the hovered node and its edges
+                        graph.updateEachNodeAttributes((n, attrs) => ({
+                            ...attrs,
+                            color: n === node ? 'red' : attrs.color,
+                        }));
+                        graph.updateEachEdgeAttributes((edge, attrs) => {
+                            const [source, target] = graph.extremities(edge);
+                            return {
+                                ...attrs,
+                                color: source === node || target === node ? 'red' : attrs.color,
+                                size: source === node || target === node ? 2 : attrs.size, // Increase the size of the arrow
+                            };
+                        });
+                        renderer.refresh(); // Update the graph display
+                    });
+
+                    renderer.on("leaveNode", () => {
+                        // Remove highlights when mouse leaves a node
+                        graph.updateEachNodeAttributes((n, attrs) => ({
+                            ...attrs,
+                            color: "#666", // Reset to original color
+                        }));
+                        graph.updateEachEdgeAttributes((edge, attrs) => ({
+                            ...attrs,
+                            color: "#888", // Reset to original color
+                            size: 1, // Reset to original size
+                        }));
+                        renderer.refresh();
+                    });
+                }
             } catch (error) {
                 console.error("Error loading or processing graph data:", error);
             }
@@ -55,113 +85,11 @@ const GraphVisualization = () => {
         loadGraph();
     }, []);
 
-    const renderGraph = (graph, focusNode = null, depth = 1) => {
-        const subGraph = new Graph();
-
-        if (focusNode) {
-            const nodesToVisit = new Set([focusNode]);
-            const visitedNodes = new Set();
-
-            for (let i = 0; i < depth; i++) {
-                const newNodesToVisit = new Set();
-
-                nodesToVisit.forEach(node => {
-                    if (!visitedNodes.has(node)) {
-                        visitedNodes.add(node);
-                        subGraph.mergeNode(graph.getNodeAttributes(node), node);
-
-                        graph.forEachNeighbor(node, neighbor => {
-                            if (!visitedNodes.has(neighbor)) {
-                                subGraph.mergeNode(graph.getNodeAttributes(neighbor), neighbor);
-                                subGraph.mergeEdge(graph.getEdge(node, neighbor));
-                                newNodesToVisit.add(neighbor);
-                            }
-                        });
-                    }
-                });
-
-                nodesToVisit.clear();
-                newNodesToVisit.forEach(node => nodesToVisit.add(node));
-            }
-        } else {
-            graph.forEachNode((node) => {
-                subGraph.mergeNode(graph.getNodeAttributes(node), node);
-            });
-            graph.forEachEdge((edge) => {
-                subGraph.mergeEdge(graph.getEdgeAttributes(edge), edge);
-            });
-        }
-
-        random.assign(subGraph);
-
-        if (containerRef.current) {
-            const renderer = new Sigma(subGraph, containerRef.current);
-
-            // Add hover interaction
-            renderer.on("enterNode", ({ node }) => {
-                // Highlight the hovered node and its edges
-                subGraph.updateEachNodeAttributes((n, attrs) => ({
-                    ...attrs,
-                    color: n === node ? 'red' : attrs.color,
-                }));
-                subGraph.updateEachEdgeAttributes((edge, attrs) => {
-                    const [source, target] = subGraph.extremities(edge);
-                    return {
-                        ...attrs,
-                        color: source === node || target === node ? 'red' : attrs.color,
-                        size: source === node || target === node ? 2 : attrs.size, // Increase the size of the arrow
-                    };
-                });
-                renderer.refresh(); // Update the graph display
-            });
-
-            renderer.on("leaveNode", () => {
-                // Remove highlights when mouse leaves a node
-                subGraph.updateEachNodeAttributes((n, attrs) => ({
-                    ...attrs,
-                    color: "#666", // Reset to original color
-                }));
-                subGraph.updateEachEdgeAttributes((edge, attrs) => ({
-                    ...attrs,
-                    color: "#888", // Reset to original color
-                    size: 1, // Reset to original size
-                }));
-                renderer.refresh();
-            });
-        }
-    };
-
-    const handleSearch = () => {
-        if (searchQuery && graph.hasNode(searchQuery)) {
-            renderGraph(graph, searchQuery, depth);
-        } else {
-            console.error("Node not found or graph not loaded");
-        }
-    };
-
     return (
-        <>
-            <div style={{ padding: "10px" }}>
-                <input
-                    type="text"
-                    placeholder="Search article"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <input
-                    type="number"
-                    min="1"
-                    placeholder="Depth"
-                    value={depth}
-                    onChange={(e) => setDepth(Number(e.target.value))}
-                />
-                <button onClick={handleSearch}>Search</button>
-            </div>
-            <div
-                ref={containerRef}
-                style={{ width: "100%", height: "calc(100vh - 50px)" }}
-            ></div>
-        </>
+        <div
+            ref={containerRef}
+            style={{ width: "100%", height: "100vh" }}
+        ></div>
     );
 };
 
