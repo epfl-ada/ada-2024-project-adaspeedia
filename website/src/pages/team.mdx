@@ -3,6 +3,38 @@ layout: ../layouts/TextLayout.astro
 title: The Team
 description: 
 ---
-export const year = 2024
 
-Hello {year}
+<div class="team-container">
+    <div class="team-card">
+        <a href="https://example.com/member1">
+            <img src="https://via.placeholder.com/150" alt="Member 1" />
+            <h3>Ahmed Elalamy</h3>
+        </a>
+    </div>
+    <div class="team-card">
+        <a href="https://example.com/member2">
+            <img src="https://via.placeholder.com/150" alt="Member 2" />
+            <h3>Thomas Kunz</h3>
+        </a>
+    </div>
+    <div class="team-card">
+        <a href="https://example.com/member3">
+            <img src="https://via.placeholder.com/150" alt="Member 3" />
+            <h3>Ghita Tagemouati</h3>
+        </a>
+    </div>
+    <div class="team-card">
+        <a href="https://pmd.lt/">
+            <img src="https://pmd.lt/pp.jpg" alt="Member 4" />
+            <h3>Paul Madelénat</h3>
+        </a>
+    </div>
+    <div class="team-card">
+        <a href="https://example.com/member5">
+            <img src="https://via.placeholder.com/150" alt="Member 5" />
+            <h3>Léo Paoletti</h3>
+        </a>
+    </div>
+</div>
+
+import '../styles/team.css';
