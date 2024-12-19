@@ -98,7 +98,7 @@ const DistancePlotter = () => {
     );
 
     return (
-        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+        <div style={{ fontFamily: 'Arial, sans-serif' }}>
             <div>
                 <label htmlFor="articleDropdown">Select Article:</label>
                 <Select
@@ -108,10 +108,12 @@ const DistancePlotter = () => {
                     onChange={handleArticleChange}
                     placeholder="-- Select Article --"
                 />
-            </div>
+            </div><br />
 
-            <button onClick={findDistances} style={{ marginTop: '20px' }}>
-                Find distances
+            <button onClick={findDistances} style={{ marginTop: '20px' }}
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
+            >
+                📊 Plot distances
             </button>
 
             {filteredData.length > 0 && Plot && (
@@ -150,8 +152,19 @@ const DistancePlotter = () => {
                             yaxis: { title: 'Linked Article' },
                             legend: { title: 'Distance Type' },
                         }}
-                        style={{ width: '100%', height: '500px' }}
+                        style={{ width: '120%', height: '800px' }}
                     />
+
+                    <div style={{ marginTop: '20px' }}>
+                        <h3>All Distances:</h3>
+                        <ul>
+                            {filteredData.map((item, index) => (
+                                <li key={index}>
+                                    {item.linkedArticle} ({item.type === 'article1' ? 'Forward' : 'Backward'}): {item.distance}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             )}
         </div>

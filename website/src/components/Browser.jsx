@@ -118,7 +118,7 @@ const PathDropdownSearch = () => {
           onChange={handleStartChange}
           placeholder="-- Select Start --"
         />
-      </div>
+      </div><br />
 
       <div>
         <label htmlFor="endDropdown">Select End Article:</label>
@@ -130,18 +130,23 @@ const PathDropdownSearch = () => {
           isDisabled={!filteredEnds.length}
           placeholder="-- Select End --"
         />
-      </div>
+      </div><br />
 
-      <button onClick={findPathIds} disabled={!selectedStart || !selectedEnd} style={{ marginTop: '20px' }}>
-        Analyse this path
+      <button
+        onClick={findPathIds}
+        disabled={!selectedStart || !selectedEnd}
+        className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
+        style={{ marginTop: '20px' }}
+      >
+        🔎 Explore paths
       </button>
 
       {resultPathIds.length > 0 && (
         <div style={{ marginTop: '20px' }}>
           <p><strong>(Internal) Path ID:</strong> {resultPathIds.join(', ')}</p>
-          <p><strong>Human Path:</strong> {resultFullPath}</p>
-          <p><strong>LLM Path:</strong> {llmPath}</p>
-          <p><strong>LLM Memory Path:</strong> {llmMemoryPath}</p>
+          <p><strong>Human Path:</strong><br /> {resultFullPath}</p>
+          <p><strong>LLM Path:</strong><br /> {llmPath}</p>
+          <p><strong>LLM Memory Path:</strong><br /> {llmMemoryPath}</p>
         </div>
       )}
     </div>
