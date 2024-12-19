@@ -10,7 +10,6 @@ const LinksVisualisation = () => {
     const [selectedArticle, setSelectedArticle] = useState(null);
     const containerRef = useRef(null);
     const sigmaInstance = useRef(null);
-    const dragInstance = useRef(null);
 
     useEffect(() => {
         async function loadOptions() {
@@ -57,13 +56,31 @@ const LinksVisualisation = () => {
                     }
                     const text = await response.text();
 
-                    const graph = new Graph();
+                    const graph = new Graph({ multi: true });
                     const lines = text.trim().split("\n");
+                    const connectedArticles = new Set();
 
                     lines.forEach((line) => {
                         const [source, target] = line.split("\t");
 
                         if (source === selectedArticle.value || target === selectedArticle.value) {
+                            if (!graph.hasNode(source)) {
+                                graph.addNode(source, { label: decodeURIComponent(source) });
+                                connectedArticles.add(source);
+                            }
+                            if (!graph.hasNode(target)) {
+                                graph.addNode(target, { label: decodeURIComponent(target) });
+                                connectedArticles.add(target);
+                            }
+
+                            graph.addEdge(source, target, { type: "arrow", color: "#888", size: 2 });
+                        }
+                    });
+
+                    lines.forEach((line) => {
+                        const [source, target] = line.split("\t");
+
+                        if (connectedArticles.has(source) && connectedArticles.has(target)) {
                             if (!graph.hasNode(source)) {
                                 graph.addNode(source, { label: decodeURIComponent(source) });
                             }
@@ -77,7 +94,7 @@ const LinksVisualisation = () => {
 
                     graph.forEachNode((node) => {
                         const degree = graph.degree(node);
-                        const maxDegree = 20;
+                        const maxDegree = 30;
                         const size = Math.min(degree + 3, maxDegree);
                         graph.setNodeAttribute(node, "size", size);
                         graph.setNodeAttribute(node, "color", "#666");
@@ -89,26 +106,24 @@ const LinksVisualisation = () => {
                         const renderer = new Sigma(graph, containerRef.current);
                         sigmaInstance.current = renderer;
 
-                        // Initialize force supervisor
                         const settings = forceAtlas2.inferSettings(graph);
                         forceAtlas2.assign(graph, { settings, iterations: 500 });
 
-                        // Initialize drag-and-drop functionality
-                        dragInstance.current = dragNodes(renderer, graph);
-
                         renderer.on("enterNode", ({ node }) => {
+                            const connectedEdges = new Set(graph.edges(node));
                             graph.updateEachNodeAttributes((n, attrs) => ({
                                 ...attrs,
-                                color: n === node ? 'red' : attrs.color,
+                                color: n === node || graph.hasEdge(n, node) ? 'red' : '#666',
                             }));
                             graph.updateEachEdgeAttributes((edge, attrs) => {
                                 const [source, target] = graph.extremities(edge);
                                 return {
                                     ...attrs,
-                                    color: source === node || target === node ? 'red' : attrs.color,
-                                    size: source === node || target === node ? 3 : attrs.size,
+                                    color: connectedEdges.has(edge) ? 'red' : '#888',
+                                    size: connectedEdges.has(edge) ? 3 : 2,
                                 };
                             });
+                            graph.filterEdges((edge) => connectedEdges.has(edge));
                             renderer.refresh();
                         });
 
@@ -122,6 +137,7 @@ const LinksVisualisation = () => {
                                 color: "#888",
                                 size: 2,
                             }));
+                            graph.filterEdges(() => true);
                             renderer.refresh();
                         });
                     }
