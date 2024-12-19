@@ -2,14 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 import { Sigma } from "sigma";
 import Graph from "graphology";
-import ForceSupervisor from "graphology-layout-force/worker";
+import { random } from "graphology-layout";
+import forceAtlas2 from "graphology-layout-forceatlas2";
 
 const LinksVisualisation = () => {
     const [options, setOptions] = useState([]);
     const [selectedArticle, setSelectedArticle] = useState(null);
     const containerRef = useRef(null);
     const sigmaInstance = useRef(null);
-    const forceSupervisor = useRef(null);
+    const dragInstance = useRef(null);
 
     useEffect(() => {
         async function loadOptions() {
@@ -64,10 +65,10 @@ const LinksVisualisation = () => {
 
                         if (source === selectedArticle.value || target === selectedArticle.value) {
                             if (!graph.hasNode(source)) {
-                                graph.addNode(source, { label: decodeURIComponent(source), x: Math.random(), y: Math.random() });
+                                graph.addNode(source, { label: decodeURIComponent(source) });
                             }
                             if (!graph.hasNode(target)) {
-                                graph.addNode(target, { label: decodeURIComponent(target), x: Math.random(), y: Math.random() });
+                                graph.addNode(target, { label: decodeURIComponent(target) });
                             }
 
                             graph.addEdge(source, target, { type: "arrow", color: "#888", size: 2 });
@@ -82,15 +83,18 @@ const LinksVisualisation = () => {
                         graph.setNodeAttribute(node, "color", "#666");
                     });
 
+                    random.assign(graph);
+
                     if (containerRef.current) {
                         const renderer = new Sigma(graph, containerRef.current);
                         sigmaInstance.current = renderer;
 
-                        // Initialize ForceSupervisor
-                        forceSupervisor.current = new ForceSupervisor(graph, { isNodeFixed: (_, attr) => attr.fixed });
+                        // Initialize force supervisor
+                        const settings = forceAtlas2.inferSettings(graph);
+                        forceAtlas2.assign(graph, { settings, iterations: 500 });
 
-                        // Start the layout
-                        forceSupervisor.current.start();
+                        // Initialize drag-and-drop functionality
+                        dragInstance.current = dragNodes(renderer, graph);
 
                         renderer.on("enterNode", ({ node }) => {
                             graph.updateEachNodeAttributes((n, attrs) => ({
@@ -118,22 +122,6 @@ const LinksVisualisation = () => {
                                 color: "#888",
                                 size: 2,
                             }));
-                            renderer.refresh();
-                        });
-
-                        renderer.on("downNode", ({ node }) => {
-                            graph.setNodeAttribute(node, 'fixed', true);
-                            forceSupervisor.current.start();
-                        });
-
-                        renderer.on("mouseupNode", ({ node }) => {
-                            graph.removeNodeAttribute(node, 'fixed');
-                            forceSupervisor.current.start();
-                        });
-
-                        renderer.on("dragNode", ({ node, event }) => {
-                            graph.setNodeAttribute(node, 'x', event.x);
-                            graph.setNodeAttribute(node, 'y', event.y);
                             renderer.refresh();
                         });
                     }
