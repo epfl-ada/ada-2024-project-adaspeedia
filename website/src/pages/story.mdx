@@ -48,6 +48,15 @@ We've analyzed it to keep only the essentials :
 - **Paths** - The sequence of articles visited by players (id & title of the articles separated by a comma).
 
 
+# The digital mind's capabilities: A comparative analysis
+
+Let's first look at the lengths of paths
+![](/charts/humans_paths_finished_steps.png)
+![](/charts/gp4omni_no_memory_paths_finished_steps.png)
+As visible here, the paths created by humans usually tend to be longer, with a maximum of 435, and a median of 6. The median for the paths created by the LLM without memory is of 3 with a maximum of 16. Clearly, LLMs tend to complete paths faster than humans, showing that the machine is clearly playing better than humans. However, we can see some obvious outliers in the humans dataset, e.g. a path finished in 435 steps. To correct that, we suggest looking at the value up to the 98th percentile.
+![](/charts/gp4omni_no_memory_humans_98th_percentile_paths_finished_steps.png)
+
+
 # The machine's understanding of the human language
 
 Prior to our study, other methods already existed to compute the semantic distance between two words. Indeed, language models usually use a system of *word embeddings*, which is a specific representation of words and notions. An interesting point with these embeddings is that they can be visualized as high-dimensionnal vectors. They can hence be compared together with simpler comparison tools, such as the euclidean L2 distance.
