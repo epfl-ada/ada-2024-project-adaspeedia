@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 import { Sigma } from "sigma";
 import Graph from "graphology";
-import ForceSupervisor from "graphology-layout-force/worker";
+import { random } from "graphology-layout";
+import forceAtlas2 from "graphology-layout-forceatlas2";
 
 const LinksVisualisation = () => {
     const [options, setOptions] = useState([]);
     const [selectedArticle, setSelectedArticle] = useState(null);
     const containerRef = useRef(null);
     const sigmaInstance = useRef(null);
-    const forceSupervisor = useRef(null);
 
     useEffect(() => {
         async function loadOptions() {
@@ -56,18 +56,36 @@ const LinksVisualisation = () => {
                     }
                     const text = await response.text();
 
-                    const graph = new Graph();
+                    const graph = new Graph({ multi: true });
                     const lines = text.trim().split("\n");
+                    const connectedArticles = new Set();
 
                     lines.forEach((line) => {
                         const [source, target] = line.split("\t");
 
                         if (source === selectedArticle.value || target === selectedArticle.value) {
                             if (!graph.hasNode(source)) {
-                                graph.addNode(source, { label: decodeURIComponent(source), x: Math.random(), y: Math.random() });
+                                graph.addNode(source, { label: decodeURIComponent(source) });
+                                connectedArticles.add(source);
                             }
                             if (!graph.hasNode(target)) {
-                                graph.addNode(target, { label: decodeURIComponent(target), x: Math.random(), y: Math.random() });
+                                graph.addNode(target, { label: decodeURIComponent(target) });
+                                connectedArticles.add(target);
+                            }
+
+                            graph.addEdge(source, target, { type: "arrow", color: "#888", size: 2 });
+                        }
+                    });
+
+                    lines.forEach((line) => {
+                        const [source, target] = line.split("\t");
+
+                        if (connectedArticles.has(source) && connectedArticles.has(target)) {
+                            if (!graph.hasNode(source)) {
+                                graph.addNode(source, { label: decodeURIComponent(source) });
+                            }
+                            if (!graph.hasNode(target)) {
+                                graph.addNode(target, { label: decodeURIComponent(target) });
                             }
 
                             graph.addEdge(source, target, { type: "arrow", color: "#888", size: 2 });
@@ -76,35 +94,36 @@ const LinksVisualisation = () => {
 
                     graph.forEachNode((node) => {
                         const degree = graph.degree(node);
-                        const maxDegree = 20;
+                        const maxDegree = 30;
                         const size = Math.min(degree + 3, maxDegree);
                         graph.setNodeAttribute(node, "size", size);
                         graph.setNodeAttribute(node, "color", "#666");
                     });
 
+                    random.assign(graph);
+
                     if (containerRef.current) {
                         const renderer = new Sigma(graph, containerRef.current);
                         sigmaInstance.current = renderer;
 
-                        // Initialize ForceSupervisor
-                        forceSupervisor.current = new ForceSupervisor(graph, { isNodeFixed: (_, attr) => attr.fixed });
-
-                        // Start the layout
-                        forceSupervisor.current.start();
+                        const settings = forceAtlas2.inferSettings(graph);
+                        forceAtlas2.assign(graph, { settings, iterations: 500 });
 
                         renderer.on("enterNode", ({ node }) => {
+                            const connectedEdges = new Set(graph.edges(node));
                             graph.updateEachNodeAttributes((n, attrs) => ({
                                 ...attrs,
-                                color: n === node ? 'red' : attrs.color,
+                                color: n === node || graph.hasEdge(n, node) ? 'red' : '#666',
                             }));
                             graph.updateEachEdgeAttributes((edge, attrs) => {
                                 const [source, target] = graph.extremities(edge);
                                 return {
                                     ...attrs,
-                                    color: source === node || target === node ? 'red' : attrs.color,
-                                    size: source === node || target === node ? 3 : attrs.size,
+                                    color: connectedEdges.has(edge) ? 'red' : '#888',
+                                    size: connectedEdges.has(edge) ? 3 : 2,
                                 };
                             });
+                            graph.filterEdges((edge) => connectedEdges.has(edge));
                             renderer.refresh();
                         });
 
@@ -118,22 +137,7 @@ const LinksVisualisation = () => {
                                 color: "#888",
                                 size: 2,
                             }));
-                            renderer.refresh();
-                        });
-
-                        renderer.on("downNode", ({ node }) => {
-                            graph.setNodeAttribute(node, 'fixed', true);
-                            forceSupervisor.current.start();
-                        });
-
-                        renderer.on("mouseupNode", ({ node }) => {
-                            graph.removeNodeAttribute(node, 'fixed');
-                            forceSupervisor.current.start();
-                        });
-
-                        renderer.on("dragNode", ({ node, event }) => {
-                            graph.setNodeAttribute(node, 'x', event.x);
-                            graph.setNodeAttribute(node, 'y', event.y);
+                            graph.filterEdges(() => true);
                             renderer.refresh();
                         });
                     }

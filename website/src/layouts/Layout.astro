@@ -11,29 +11,41 @@ const navigation = [
   {
     title: "Home",
     path: "/",
-    icon: "Home"
+    icon: "Home",
   },
   {
     title: "Story",
     path: "/story",
-    icon: "BookOpenText"
+    icon: "BookOpenText",
+  },
+  {
+    title: "Paths Browser",
+    path: "/browser",
+    icon: "Search",
+  },
+  {
+    title: "Distances Plotter",
+    path: "/distances",
+    icon: "ChartBar",
+  },
+  {
+    title: "Links Visualisation",
+    path: "/links",
+    icon: "Globe",
   },
   {
     title: "Team",
     path: "/team",
-    icon: "Users"
+    icon: "Users",
   },
   {
     title: "Github",
     path: "https://github.com/epfl-ada/ada-2024-project-adaspeedia",
-    icon: "Github"
-  }
+    icon: "Github",
+  },
 ];
 
-const { 
-  title,
-  description = "",
-} = Astro.props;
+const { title, description = "" } = Astro.props;
 ---
 
 <!doctype html>
@@ -47,14 +59,17 @@ const {
 
     <script is:inline>
       const getThemePreference = () => {
-        if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
           return localStorage.getItem("theme");
         }
         return window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark"
           : "light";
       };
-      const isDark = getThemePreference() === "dark";
+      const isDark = false;
       document.documentElement.classList[isDark ? "add" : "remove"]("dark");
 
       if (typeof localStorage !== "undefined") {
@@ -70,17 +85,14 @@ const {
     </script>
     <script>
       // Initialize layout
-      import { initLayout } from '../stores/layout'
-      initLayout()
+      import { initLayout } from "../stores/layout";
+      initLayout();
     </script>
   </head>
   <body class="min-h-screen bg-background font-sans antialiased">
     <div class="flex min-h-screen">
-      <Sidebar 
-        navigation={navigation} 
-        client:load 
-      />
-      
+      <Sidebar navigation={navigation} client:load />
+
       <div id="main-content" class="flex-1">
         <main class="py-6">
           <slot />
@@ -88,4 +100,4 @@ const {
       </div>
     </div>
   </body>
-</html> 
+</html>

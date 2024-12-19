@@ -7,6 +7,7 @@ import {
   Users,
   Github,
   BookOpenText,
+  Globe, ChartBar, Search,
   type LucideIcon
 } from 'lucide-react'
 import { useStore } from '@nanostores/react'
@@ -16,7 +17,10 @@ const icons: Record<string, LucideIcon> = {
   Home,
   Users,
   Github,
-  BookOpenText,
+  Globe,
+  ChartBar,
+  Search,
+  BookOpenText
 }
 
 interface SidebarProps {

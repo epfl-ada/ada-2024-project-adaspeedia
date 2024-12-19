@@ -35,45 +35,13 @@
     --sidebar-active: #1a1a1a;
     --sidebar-border: 220 10% 24%;
   }
-
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
-  ;
-    --sidebar-bg: #161616;
-    --sidebar-fg: 220 10% 90%;
-    --sidebar-hover: #222222;
-    --sidebar-active: #1a1a1a;
-    --sidebar-border: 220 10% 24%;
-  }
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -111,7 +79,8 @@
 
 /* Add padding for header layout */
 [data-layout="header"] #main-content {
-  @apply pt-20; /* Adjust this value based on your header height */
+  @apply pt-20;
+  /* Adjust this value based on your header height */
 }
 
 /* Content container styles for both layouts */
@@ -121,7 +90,7 @@
 }
 
 /* Adjust margin when sidebar expands */
-[data-layout="sidebar"] .sidebar-expanded + #main-content {
+[data-layout="sidebar"] .sidebar-expanded+#main-content {
   @apply ml-64;
 }
 
@@ -135,6 +104,6 @@
 }
 
 /* Optional: Style inline code differently if needed */
-.prose :not(pre) > code {
+.prose :not(pre)>code {
   @apply px-1.5 py-0.5 rounded-md;
 }
