@@ -53,7 +53,7 @@ We've analyzed it to keep only the essentials :
 A good first indicator of our machine's capabilities is to look at the lengths of the paths completed.
 ![](/charts/humans_paths_finished_steps.png)
 ![](/charts/gpt4omni_no_memory_paths_finished_steps.png)
-As visible here, the paths created by humans usually tend to be longer, with a maximum of 435, and a median of 6. The median for the paths created by the LLM without memory is of 3 with a maximum of 16. Clearly, LLMs tend to complete paths faster than humans, showing that the machine is clearly playing better than humans. However, we can see some obvious outliers in the humans dataset, e.g. a path finished in 435 steps. This may hinder our ability to truly visualize how both distributions are. To correct that, we suggest looking at the value up to the 99th percentile.
+As visible here, the paths created by humans usually tend to be longer, with a maximum of 435, and a median of 6 steps. The median for the paths created by the LLM without memory is of 3 steps with a maximum of 16. Clearly, LLMs tend to complete paths faster than humans, showing that the machine is clearly playing better than humans. However, we can see some obvious outliers in the humans dataset, e.g. a path finished in 435 steps. This may hinder our ability to truly visualize how both distributions are. To correct that, we suggest looking at the value up to the 99th percentile.
 ![](/charts/gpt4omni_no_memory_humans_98th_percentile_paths_finished_steps.png)
 
 Over here, we can see more clearly how much both distributions are different. The human paths are spreading more towards the right, i.e. they are more lenghier in general.
@@ -63,6 +63,14 @@ As a first indicator, this shows that our machine is able to think more efficien
 Now, we're interested to see if the machine can succeed where humans fail. We therefore took the paths where humans previously failed, i.e. unique pairs of start and goal articles that have never been finished by humans. We ran our machine on these 1396 paths. Overall we get the following distribution of outcomes.
 
 ![](/charts/piechart_llm_on_unfinished.png)
+
+"Wrong answer" refers to the machine trying to access a link that is not part of the ones available at a given step, "Dead end" refers to arriving at an article with no outgoing links and "Loop detected" means that the machine is stuck in a loop.
+
+Here, the machine has been able to finish 30% of paths that humans were previously unable to complete. This shows our machine's superiority against the human race. To go even further, we decided to look at the distribution of the lengths on these new completed paths.
+
+![](/charts/llm_finished_vs_unfinished.png)
+
+We clearly see that overall, our machine takes more steps on these paths than on the previous one, with a median of 5 steps. However, this might be due to the "difficulty" of the paths, i.e. the amount of minimum required steps to reach the goal, having increased on the unfinished paths by humans, which would also explain the humans' failure.
 
 # The machine's understanding of the human language
 
