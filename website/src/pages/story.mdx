@@ -50,12 +50,19 @@ We've analyzed it to keep only the essentials :
 
 # The digital mind's capabilities: A comparative analysis
 
-Let's first look at the lengths of paths
+A good first indicator of our machine's capabilities is to look at the lengths of the paths completed.
 ![](/charts/humans_paths_finished_steps.png)
-![](/charts/gp4omni_no_memory_paths_finished_steps.png)
-As visible here, the paths created by humans usually tend to be longer, with a maximum of 435, and a median of 6. The median for the paths created by the LLM without memory is of 3 with a maximum of 16. Clearly, LLMs tend to complete paths faster than humans, showing that the machine is clearly playing better than humans. However, we can see some obvious outliers in the humans dataset, e.g. a path finished in 435 steps. To correct that, we suggest looking at the value up to the 98th percentile.
-![](/charts/gp4omni_no_memory_humans_98th_percentile_paths_finished_steps.png)
+![](/charts/gpt4omni_no_memory_paths_finished_steps.png)
+As visible here, the paths created by humans usually tend to be longer, with a maximum of 435, and a median of 6. The median for the paths created by the LLM without memory is of 3 with a maximum of 16. Clearly, LLMs tend to complete paths faster than humans, showing that the machine is clearly playing better than humans. However, we can see some obvious outliers in the humans dataset, e.g. a path finished in 435 steps. This may hinder our ability to truly visualize how both distributions are. To correct that, we suggest looking at the value up to the 99th percentile.
+![](/charts/gpt4omni_no_memory_humans_98th_percentile_paths_finished_steps.png)
 
+Over here, we can see more clearly how much both distributions are different. The human paths are spreading more towards the right, i.e. they are more lenghier in general.
+
+As a first indicator, this shows that our machine is able to think more efficiently than humans. It is able to link two notions together in smaller steps, displaying great skills at this game.
+
+Now, we're interested to see if the machine can succeed where humans fail. We therefore took the paths where humans previously failed, i.e. unique pairs of start and goal articles that have never been finished by humans. We ran our machine on these 1396 paths. Overall we get the following distribution of outcomes.
+
+![](/charts/piechart_llm_on_unfinished.png)
 
 # The machine's understanding of the human language
 
