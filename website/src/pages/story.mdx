@@ -72,6 +72,14 @@ Here, the machine has been able to finish 30% of paths that humans were previous
 
 We clearly see that overall, our machine takes more steps on these paths than on the previous one, with a median of 5 steps. However, this might be due to the "difficulty" of the paths, i.e. the amount of minimum required steps to reach the goal, having increased on the unfinished paths by humans, which would also explain the humans' failure.
 
+As previously mentionned, humans usually adopt a strategy of getting away then homing in, passing through hubs. Let's see if the most visited articles are similar.
+
+![](/charts/most_visited_articles_human.png)
+![](/charts/most_visited_articles_llm.png)
+
+Humans seem to focus on various geographical locations more. In contrast, the machine appears more focused on scientific concepts. Still, some articles appear on both, such as United_States. When looking at the connectivity of the Wikipedia article for United States, it reveals 1551 incoming and 294 outgoing links. This mean that the U.S. article is a great hub that can be easily accessible and lead to many useful links. 
+The fact that it is less used than the Wikipedia article for "Animal" on the machine side seems surprising. However, this might reveal some implicit bias from the LLM towards the United_States article, for example it may not want to use that article for political reasons and controversy.
+
 # The machine's understanding of the human language
 
 Prior to our study, other methods already existed to compute the semantic distance between two words. Indeed, language models usually use a system of *word embeddings*, which is a specific representation of words and notions. An interesting point with these embeddings is that they can be visualized as high-dimensionnal vectors. They can hence be compared together with simpler comparison tools, such as the euclidean L2 distance.
