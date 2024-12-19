@@ -119,11 +119,11 @@ const LinksVisualisation = () => {
                                 const [source, target] = graph.extremities(edge);
                                 return {
                                     ...attrs,
+                                    hidden: !connectedEdges.has(edge),
                                     color: connectedEdges.has(edge) ? 'red' : '#888',
                                     size: connectedEdges.has(edge) ? 3 : 2,
                                 };
                             });
-                            graph.filterEdges((edge) => connectedEdges.has(edge));
                             renderer.refresh();
                         });
 
@@ -134,10 +134,10 @@ const LinksVisualisation = () => {
                             }));
                             graph.updateEachEdgeAttributes((edge, attrs) => ({
                                 ...attrs,
+                                hidden: false,
                                 color: "#888",
                                 size: 2,
                             }));
-                            graph.filterEdges(() => true);
                             renderer.refresh();
                         });
                     }
