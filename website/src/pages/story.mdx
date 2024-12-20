@@ -106,7 +106,12 @@ Over here, we can see more clearly how much both distributions are different. Th
 We can look at specific examples. United_States -> Abraham_Lincoln. A human mind might first think about Abraham Lincoln being President of the United States, and hence take the path United_States -> President_of_the_United_States -> Abraham_Lincoln. Our machine abstracts these unnecessary connections and "sees" that Abraham_Lincoln is directly reacheable from United_States.
 As a first indicator, this shows that our machine is able to think more efficiently than humans. It is able to link two notions together in smaller steps, displaying great skills at this game.
 
-Note: You can use our [**Paths browser**](/browser) to compare how both LLM and humans navigated different paths.
+
+   <Alert variant="info">
+        <AlertTitle>Note</AlertTitle>
+        <AlertDescription>You can use our to compare how both LLM and humans navigated different paths</AlertDescription><br />
+        <Button>🔎 Explore Paths</Button>
+    </Alert>
 
 Now, we're interested to see if the machine can succeed where humans fail. We therefore took the paths where humans previously failed, i.e. unique pairs of start and goal articles that have never been finished by humans. We ran our machine on these 1396 paths. Overall we get the following distribution of outcomes.
 
@@ -126,6 +131,11 @@ As previously mentionned, humans usually adopt a strategy of getting away then h
 
 Humans seem to focus on various geographical locations more. In contrast, the machine appears more focused on scientific concepts. Still, some articles appear on both, such as United_States. When looking at the connectivity of the Wikipedia article for United States, it reveals 1551 incoming and 294 outgoing links. This mean that the U.S. article is a great hub that can be easily accessible and lead to many useful links. 
 The fact that it is less used than the Wikipedia article for "Animal" on the machine side seems surprising. However, this might reveal some implicit bias from the LLM towards the United_States article. It may not want to use that article as it might have been trained to avoid controversial notions and stay on more "neutral" concepts such as science and nature. This can explain why it prefers going through 'Animal' despite that article being 3 times less reacheable and leading to 10 times less articles than 'United_States'. Nonetheless, the 'United_States' article is still a close second, which shows how useful and unavoidable this article is.
+
+
+
+As you can see, our initial basic protocol leads to a significant number of paths left unexplored to completion, largely due to detected loops.  
+As a further step, we run our LLM with memory on this specific subset of unfinished paths, along with a sample of standard paths, to compare the performance of the memoryless LLM against the one with memory. In total, 13,411 paths are processed by our system.
 
 # The machine's understanding of the human language
 
