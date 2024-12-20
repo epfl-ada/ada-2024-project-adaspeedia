@@ -1,5 +1,6 @@
 
-# Ready Player LLM: How do the semantic distances elicited from LLMs using the Wikispeedia measure of relatedness compare to the ones computed from human games?
+# Let LLM play Wikispeedia!
+## How do the semantic distances elicited from LLMs using the Wikispeedia measure of relatedness compare to the ones computed from human games?
 
 ## Abstract
 
@@ -153,6 +154,8 @@ folder, because they were expensive to compute.
 ```
 ├── data                        <- Our generated datasets, along with the Wikispeedia dataset that must be downloaded separetely
 │
+├── website                     <- The website directory (see the readme inside this folder to learn more about how the website is compiled and how to compile it locally
+│
 ├── src                         <- Source code
 │   ├── utils                           <- Utility directory
 │   ├── scripts                         <- Python scripts to generate our datasets
@@ -164,8 +167,9 @@ folder, because they were expensive to compute.
 └── README.md
 ```
 
-## Run LLM games
+## Run LLM paths
+If you want to run the LLM on a given subset of the human paths, just use this command, with `--memory` or not.
 
 ```
-python src/scripts/run_llm_games.py --start_line 1000 --num_items 3 --start_run_id 0
+python src/scripts/run_llm_paths.py --start_line 1000 --num_items 3 --memory
 ```
