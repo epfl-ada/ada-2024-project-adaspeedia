@@ -82,7 +82,13 @@ Paul Madélénat:
 - …
 
 Ghita Tagemouati:
-- …
+- Calculation of the embedding distances and articles similarities using different distance measures
+- Generating the mistralai data, part on the openai data (finished and unfinished human paths)
+- Description and Analysis of the data
+- Analysis of the comparaison between the paths taken by human and the llm
+- Analysis of the comparaison between the paths taken by openai llm and the mistralai llm
+- Answered research question 3
+- Writing some parts of the data story
 
 Ahmed Elalamy:
 - …
