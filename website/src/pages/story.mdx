@@ -7,12 +7,6 @@ import '../styles/team.css';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
-   <Alert variant="success">
-        <AlertTitle>Si vous voulez faire une référence</AlertTitle>
-        <AlertDescription>Utilisez ce component, qui permet de rediriger par ex. vers un outil du site</AlertDescription><br />
-        <Button>🔎 Explore Paths</Button>
-    </Alert>
-
 In a world where humanity must rebuild from the ashes, games may seem like a trivial pursuit. Yet, in the aftermath of the apocalypse, our mission at the **Applied Digital Anthropology (ADA)** department of the New Age government is anything but trivial. Tasked with restoring the essence of human civilization, we’ve turned to an unexpected cornerstone of human experience: games.
 
 Our team is exploring how machines can simulate human cognition and strategies to help shape the future of this planet. Why games? Because they encapsulate problem-solving, strategic thinking, and creativity — traits essential for humanity’s survival and progress. To this end, we’ve embarked on a case study of [**Wikispeedia**](https://dlab.epfl.ch/wikispeedia/play/), a game that challenges players to navigate Wikipedia’s web of articles from one topic to another using only hyperlinks. Simple, yet deeply revealing of how humans connect concepts, prioritize paths, and think under constraints.
@@ -128,7 +122,7 @@ As a first indicator, this shows that our machine is able to think more efficien
    <Alert variant="info">
         <AlertTitle>Note</AlertTitle>
         <AlertDescription>You can use our to compare how both LLM and humans navigated different paths</AlertDescription><br />
-        <Button>🔎 Explore Paths</Button>
+        <a href="/browser"><Button>🔎 Explore Paths</Button></a>
     </Alert>
 
 Now, we're interested to see if the machine can succeed where humans fail. We therefore took the paths where humans previously failed, i.e. unique pairs of start and goal articles that have never been finished by humans. We ran our machine on these 1396 paths. Overall we get the following distribution of outcomes.
