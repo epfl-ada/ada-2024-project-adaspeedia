@@ -77,9 +77,14 @@ Limitations of our approach:
 
 ## Contributions of the group members
 
-Paul Madélénat:
-- Built the website
-- …
+Paul Madelénat:
+- Write the script `run_llm_paths.py` to enable LLMs to run paths with and without memory
+- Creation of the entire website (https://adaspeedia.pages.dev) in the `/website` directory
+- Paths Browser (https://adaspeedia.pages.dev/browser/)
+- Distances Plotter (https://adaspeedia.pages.dev/distances/)
+- Links Visualisation (https://adaspeedia.pages.dev/links/)
+- Path analysis (human, memoryless LLMs, memory LLMs)
+- Writing some parts of the data story
 
 Ghita Tagemouati:
 - Calculation of the embedding distances and articles similarities using different distance measures
