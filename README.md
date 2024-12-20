@@ -15,9 +15,7 @@ Robert West et al. showcased a novel method to infer semantic distances between 
 
 3. Do LLMs find shorter paths than humans on average and how do they compare when it comes to finished paths rated as difficult by humans ?
 
-4. Does the moderation of LLMs introduce biases in the computed semantic distance from LLM games, and in particular do LLMs inflate the semantic distance when considering sensitive associations like 'Slavery' and 'African American'?
-
-5. Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?
+4. Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?
 
 ### Alternatives considered
 
@@ -63,19 +61,8 @@ Our method for each question:
   2. We compute the mean information gain along the paths, then check whether 
      the distribution has the same U-shape for LLMs as it has for humans 
      (t-test).
-  3. We make the LLM play the Wikispeedia game with every pair of start and goal article that was played by humans, and compare the average length of the path for humans and the LLM. We then compare the mean path length on the subset of paths that have a high difficulty rating to test if the LLM performs significantly better and reaches the goal in less step than humans on difficult tasks. 
-
-  4. To answer this question, we need to:
-     - Find associations judged sensitive by the LLM:
-       extract every pair of articles for which we have the human distances.
-       To know if these pairs of articles are judged sensitive by the LLM
-       (gpt4o-mini), we use OpenAI’s `omni-moderation-latest` model. Sensitivity
-       scores are returned per category (e.g. violence, hate). We already
-       implemented the function `verify_sensitivity` to ensure feasibility.
-     - Compare the difference in semantic distances between the LLM 
-       and humans by sensitivity score to test the hypothesis that the LLM
-       introduces higher semantic distance when for sensitive associations of concepts (e.g. African Americans and Slavery) 
-  5. We repeat the previous analyses but this time comparing human Wikispeedia distances to the embedding distances.
+  3. We make the LLM play the Wikispeedia game with every pair of start and goal article that was played by humans, and compare the average length of the path for humans and the LLM. We then compare the mean path length on the subset of paths that have a high difficulty rating to test if the LLM performs significantly better and reaches the goal in less step than humans on difficult tasks.
+4. We repeat the previous analyses but this time comparing human Wikispeedia distances to the embedding distances.
   
 
 Limitations of our approach:
