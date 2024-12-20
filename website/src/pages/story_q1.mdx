@@ -1,0 +1,35 @@
+---
+layout: ../layouts/TextLayout.astro
+title: Research Question 1
+description:
+---
+
+1. What distribution does the difference between human and LLM distances follow?
+
+We take the intersection of distances that were computed from human and LLM games. We test if the average semantic distance is higher for humans. We extract the pairs of articles with a distance difference higher than the third quartile and analyse them to spot patterns. We emit hypothesis based on this initial study and search for counter-examples. We then plot the mean difference per article category.
+
+What are the articles for which humans and LLM distances differ, or agree? Do they belong to specific categories?
+After a quick glance Thomas did not see obvious patterns, but could (should?) be analyzed formally
+Does the path length correlate with the semantic distance between the starting and goal article of the path? -> Yes, a little bit. So what? (Thomas)
+How much difference and for which articles?
+
+-----
+
+We wanted to see whether the games played by the LLMs would lead to different semantic distance measres. We computed the semantic distances between pairs of articles using both human game paths ad LLM game paths (without memory), using the same method as in the Wikispeedia paper. Then for all the pairs for which we had both an LLM distance and a human distance (TODO, which proportion), we plotted the difference between the two distances. We expected to have some differences, as the LLM played the game without memory, contrary to humans, potentially leading to different strategies, different concept associations and thus different semantic distances inferred.
+
+We found out that most article pairs had similar distances from humans and the LLM, with a mean and median distance difference of -0.02 and -0.03, respectively, and an big peak in our histogram at 0, meaning more than 1200 pairs have the same semantic distance for both humans and LLM. So, on average, the difference is only a small deviation from the average semantic distance, which is around 0.4 (both for LLM and humans). However, this small average difference hides the fact that there is actually quite some variance. Most distances distance differences are close to zero, but given that most distances are small, the differences are still significant in most cases. For example, 50% of the articles pairs that had both a human and an LLM semantic distance had an absolute difference in semantic distance of less than 0.12, but 0.12 represents more than 25% of the average distance. And this still leaves us with 50% of the pairs that have an even bigger distance difference between humans and LLM.0
+
+The plot of differences looks somewhat like a Gaussian distribution centered around 0, with very small number of article pairs having very large distance differences (more than 0.5). However, the disproportionate peak at 0 breaks the normality of the data, and both the Anderson-Darling test, the D’Agostino’s K^2 test and a QQ plot show that the distances do not formally follow a normal distribution.
+
+![](/charts/difference_humans_llm.png)
+
+The conclusions we can draw from this are that while on average the behavior of the LLM seems to encode similar notions of semantic distances between concepts as humans, there is still some variance that make the distances dissimilar in non-negligible ways in a lot of cases. This was to be expected with given the protocol the LLM follows, playing without remembering the past steps of its path as it moves through the graph, leading to potentially less strategic and planned decisions involving conceptual relationships, and a bit more random wandering, amplified by the randomness inherent to the LLM.
+
+So we decided to test again with a different protocol, and repeated the analysis, this time computing distances from LLM paths played with the LLM being aware of its previous steps in the path (“LLM with memory”).
+
+
+
+
+-----
+
+Do the article pairs that have the biggest difference in their human vs LLM semantic distances belong to a specific category of follow a specific pattern? We looked at the 10% of article pairs that had the biggest difference, and found articles of all categories and all types of pairs. We were not able to identify a predominant pattern in these pairs of articles.
