@@ -96,10 +96,14 @@ Ghita Tagemouati:
 - Writing some parts of the data story
 
 Ahmed Elalamy:
-- …
+- Wikispeedia data exploration
+- Generation of the OpenAI data
+- Quantitative comparative analysis between the paths taken by human and the llm
+- Conceptualization of the data story (Story idea, engineering of the direction to follow)
+- Writing parts of the data story
 
 Thomas Kuntz:
-- Compatation of the semantic distances
+- Computation of the semantic distances
 - Analyses of the difference between human and LLM semantic distances
 - Explanation of the methods used to compute probabilities, entropies, information gain and distances
 - Comparing the distribution of entropies for humans and for the LLM without memory
