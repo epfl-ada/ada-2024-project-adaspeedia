@@ -15,9 +15,7 @@ Robert West et al. showcased a novel method to infer semantic distances between 
 
 3. Do LLMs find shorter paths than humans on average and how do they compare when it comes to finished paths rated as difficult by humans ?
 
-4. Does the moderation of LLMs introduce biases in the computed semantic distance from LLM games, and in particular do LLMs inflate the semantic distance when considering sensitive associations like 'Slavery' and 'African American'?
-
-5. Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?
+4. Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?
 
 ### Alternatives considered
 
@@ -63,19 +61,8 @@ Our method for each question:
   2. We compute the mean information gain along the paths, then check whether 
      the distribution has the same U-shape for LLMs as it has for humans 
      (t-test).
-  3. We make the LLM play the Wikispeedia game with every pair of start and goal article that was played by humans, and compare the average length of the path for humans and the LLM. We then compare the mean path length on the subset of paths that have a high difficulty rating to test if the LLM performs significantly better and reaches the goal in less step than humans on difficult tasks. 
-
-  4. To answer this question, we need to:
-     - Find associations judged sensitive by the LLM:
-       extract every pair of articles for which we have the human distances.
-       To know if these pairs of articles are judged sensitive by the LLM
-       (gpt4o-mini), we use OpenAI’s `omni-moderation-latest` model. Sensitivity
-       scores are returned per category (e.g. violence, hate). We already
-       implemented the function `verify_sensitivity` to ensure feasibility.
-     - Compare the difference in semantic distances between the LLM 
-       and humans by sensitivity score to test the hypothesis that the LLM
-       introduces higher semantic distance when for sensitive associations of concepts (e.g. African Americans and Slavery) 
-  5. We repeat the previous analyses but this time comparing human Wikispeedia distances to the embedding distances.
+  3. We make the LLM play the Wikispeedia game with every pair of start and goal article that was played by humans, and compare the average length of the path for humans and the LLM. We then compare the mean path length on the subset of paths that have a high difficulty rating to test if the LLM performs significantly better and reaches the goal in less step than humans on difficult tasks.
+4. We repeat the previous analyses but this time comparing human Wikispeedia distances to the embedding distances.
   
 
 Limitations of our approach:
@@ -88,26 +75,27 @@ Limitations of our approach:
 - If human and LLM games give the same distances, we will transpose our 
   questions to the distances obtained from the embeddings.
 
-## Timeline and organisation after P2
+## Contributions of the group members
 
-We will distribute tasks via bi-weekly SCRUM meetings.
+Paul Madélénat:
+- Built the website
+- …
 
-Week 1: Finalize datasets for each question using our pipeline. Start 
-analysing them and visualizing key statistics to refine our methods.
+Ghita Tagemouati:
+- …
 
-Week 2: Distribute and prioritize the questions. Emit clear hypothesis for
-each and start building tests to challenge these hypotheses. 
+Ahmed Elalamy:
+- …
 
-Week 3: Consider the insights so far to identify potential new questions and 
-insightful results to integrate in our data story. Finish analysis on our 
-initial research questions and distribute the new research questions. 
+Thomas Kuntz:
+- Compatation of the semantic distances
+- Analyses of the difference between human and LLM semantic distances
+- Explanation of the methods used to compute probabilities, entropies, information gain and distances
+- Comparing the distribution of entropies for humans and for the LLM without memory
+- Exploring the correlation between the path length and the semantic distance between the start and goal article, both for humans and LLM without memory
+- Answered research question 1 and wrote the corresponding part of the data story
+- Modularized and documented all the code from milestone 2
 
-Week 4: Finish the analysis on the second round of research questions. Construct
-a plan for the data story set up its website. Merge the questions into a 
-coherent narrative according to our main results. 
-
-Week 5: Two members create strong visualisations to articulate our results and
-the other three finalize the data story website.
 
 ## Quickstart
 
@@ -141,9 +129,7 @@ and uncompress it in the `data` folder to obtain the following:
         └── shortest-path-distance-matrix.txt
 ```
 
-You can simply run the `results.ipynb` notebook, and it will do all the work: loading the data, computing probabilities
-and information gain, splitting paths to get only the “homing in” phase, computing the resulting semantic distance,
-computing the distances between the embedding vectors.
+You can find all our analyses in the `results` notebook. We had to split it into 4 parts, otherwise it became too slow and unusable, because of the data, computations and graphics it contains.
 
 We have pre-computed the results of the LLM games and the semantic distances and stored the results in the `data`
 folder, because they were expensive to compute.
