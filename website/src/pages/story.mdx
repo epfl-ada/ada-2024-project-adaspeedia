@@ -88,9 +88,10 @@ When computing the Spearman R correlation coefficient, we find a positive correl
 # The digital mind's capabilities: A comparative analysis
 
 A good first indicator of our machine's capabilities is to look at the lengths of the paths completed.
-
+As a reminder, we've already seen previously that human paths are on average 6 steps long, with a maximum of 434.
 ![](/charts/gpt4omni_no_memory_paths_finished_steps.png)
-As visible here, the paths created by humans usually tend to be longer, with a maximum of 434, and a median of 5 steps. The median for the paths created by the LLM without memory is of 3 steps with a maximum of 16. Clearly, LLMs tend to complete paths faster than humans, showing that the machine is clearly playing better than humans. However, we can see some obvious outliers in the humans dataset, e.g. a path finished in 435 steps. This may hinder our ability to truly visualize how both distributions are. To correct that, we suggest looking at the value up to the 99th percentile.
+The median for the paths created by the LLM without memory is of 3 steps with a maximum of 16. Clearly, LLMs tend to complete paths faster than humans, showing that the machine is clearly playing better than humans. However, as previously stated outliers are present within the human dataset. This may hinder our ability to truly visualize how both distributions are. To correct that, we suggest looking at the value up to the 99th percentile.
+
 ![](/charts/gpt4omni_no_memory_humans_98th_percentile_paths_finished_steps.png)
 
 Over here, we can see more clearly how much both distributions are different. The human paths are spreading more towards the right, i.e. they are more lenghier in general.
