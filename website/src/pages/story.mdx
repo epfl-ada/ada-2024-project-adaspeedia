@@ -92,6 +92,24 @@ Obviously a positive correlation appears visually, but this is also due to outli
 When computing the Spearman R correlation coefficient, we find a positive correlation of 0.46 with a p-value at 0.0. This clearly shows that in our dataset, path length and ratings are positively corellated.
 
 #### Paths unfinished
+Within the 24875 unfinished paths, there is actually only 18190 unique ones, the other being duplicate attempts at the same source-goal pair of articles.
+We found 4200 pairs of source-goal articles in common with the finished paths. We wanted to dig deeper and look at potential difficulty markers.
+![](/charts/wikispeedia_unfinished_common_rating.png)
+Here we don't see any positive correlation. Hence we can't definitely relate ratings given by users to the difficulty of unfinished paths.
+
+Players can forfeit their attempt in two different ways: either by timing out after 30 minutes of inactivity, or by restarting manually. There is overall 64.5% of restarts and 35.5% of timeouts.
+
+# Building our machine
+
+To ensure our AI models are as reliable as possible while minimizing computation time, we have chosen the GPT-4o mini model from 2024, which is still operational today in one of the decommissioned datacenters we have repurposed. At the time, it was the most efficient and cost-effective model, making it ideal for this type of task.  
+
+We will later compare it to another model, MistralAI Large-2407, also from 2024, which we have run using our emulators.  
+
+Our analysis will be conducted in two distinct ways: with and without memory for the LLM. Initially, we will run an LLM without memory on a unique subset of human paths. There are 28,718 such paths, meaning our first LLM without memory will generate 28,718 paths based on the following prompt:  
+
+[prompt box]
+
+To avoid loops (which can easily occur when the LLM lacks memory), we deliberately choose to halt exploration whenever a loop is detected. The complete code is available here.  
 
 # The digital mind's capabilities: A comparative analysis
 
@@ -133,9 +151,24 @@ Humans seem to focus on various geographical locations more. In contrast, the ma
 The fact that it is less used than the Wikipedia article for "Animal" on the machine side seems surprising. However, this might reveal some implicit bias from the LLM towards the United_States article. It may not want to use that article as it might have been trained to avoid controversial notions and stay on more "neutral" concepts such as science and nature. This can explain why it prefers going through 'Animal' despite that article being 3 times less reacheable and leading to 10 times less articles than 'United_States'. Nonetheless, the 'United_States' article is still a close second, which shows how useful and unavoidable this article is.
 
 
-
 As you can see, our initial basic protocol leads to a significant number of paths left unexplored to completion, largely due to detected loops.  
 As a further step, we run our LLM with memory on this specific subset of unfinished paths, along with a sample of standard paths, to compare the performance of the memoryless LLM against the one with memory. In total, 13,411 paths are processed by our system.
+
+# Side research: other models?
+Do you want to see more ? From the beginning we saw how GPT-4 plays Wikispeedia. How about other LLMs?
+
+Did you here about MistralAI. It is an European leader in artificial intelligence. We chose this llm and made it follow the same protocol as our first one, without any memory. Let's see how it does.
+
+Using the Z-score, for a 95% confidence interval, the minimum number of paths needed to get a statistically significant result is 385. We added a bit more to add to the significance and therefore take randomly 565 rows from the dataset. 
+
+![](/charts/nbr_steps_openai_mistral.png)
+For the finished paths, we compared the number of steps taken and we can see that Mistral takes generally less steps to get to the target article, showing a better efficiency. Let's look deeper into the comparison of success and failures for both models.
+
+![](/charts/piechart_openai.png)
+![](/charts/piechart_mistralai.png)
+
+We can see that for both models the success rate is similar. However, OpenAI's GPT-4 tends to loop more and MistralAI tends to give more wrong answers. This can show differents digital minds, i.e. different abilities for a given task. From that we can speculate that MistralAI might have a bigger temperature, leading to more randomness in the answers and hence less predictable or correct results.
+
 
 # The machine's understanding of the human language
 
