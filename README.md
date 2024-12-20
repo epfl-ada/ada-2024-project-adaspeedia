@@ -1,6 +1,9 @@
 
 # Let LLM play Wikispeedia!
+
 ## How do the semantic distances elicited from LLMs using the Wikispeedia measure of relatedness compare to the ones computed from human games?
+
+Discover the [data story here](https://adaspeedia.pages.dev/)!
 
 ## Abstract
 
@@ -83,15 +86,15 @@ Paul Madelénat:
 - Paths Browser (https://adaspeedia.pages.dev/browser/)
 - Distances Plotter (https://adaspeedia.pages.dev/distances/)
 - Links Visualisation (https://adaspeedia.pages.dev/links/)
-- Path analysis (human, memoryless LLMs, memory LLMs)
+- Path analysis (human, memory-less LLMs, memory LLMs)
 - Writing some parts of the data story
 
 Ghita Tagemouati:
 - Calculation of the embedding distances and articles similarities using different distance measures
 - Generating the mistralai data, part on the openai data (finished and unfinished human paths)
 - Description and Analysis of the data
-- Analysis of the comparaison between the paths taken by human and the llm
-- Analysis of the comparaison between the paths taken by openai llm and the mistralai llm
+- Analysis of the comparison between the paths taken by human and the llm
+- Analysis of the comparison between the paths taken by openai llm and the mistralai llm
 - Answered research question 3
 - Writing some parts of the data story
 
@@ -164,7 +167,7 @@ folder, because they were expensive to compute.
 ├── results.ipynb               <- a well-structured notebook showing the results
 │
 ├── .gitignore                  <- List of files ignored by git
-├── pip_requirements.txt        <- File for installing python dependencies
+├── requirements.txt            <- File for installing python dependencies
 └── README.md
 ```
 
