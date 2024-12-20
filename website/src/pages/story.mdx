@@ -43,8 +43,11 @@ Our team is exploring how machines can simulate human cognition and strategies t
 
 Together, we form **ADAspeedia**, a team united in exploring how machines can emulate and evolve human behavior. To see the real faces of our team, click [here](/team). You can also view our real functions in the [readme](https://github.com/epfl-ada/ada-2024-project-adaspeedia?tab=readme-ov-file#contributions-of-the-group-members).
 
+**Our research question is**: How do LLMs compare to humans when playing the game of Wikispeedia regarding their strategy, results, and the semantic distances elicited from the Wikispeedia measure of relatedness?
+
 ## Table of Contents
-       1. [Introduction](/story)
+
+1. [Introduction](/story)
 2. [Meet the Team](#meet-the-team)
 3. [A Human Blueprint](#a-human-blueprint)
    - [Articles](#articles)
@@ -89,7 +92,7 @@ We can note that articles are always reachable within our given set. The median 
 
 ### Categories
 These refer to the classification of each article based on high level concepts they are each related to. In total, 129 categories are available in our dataset. 88% of articles are linked to one single category, around 11% have two and less than 1% have 3. This reveal different level of granularity and lack of coherence in the dataset. For example, 'United_States' is linked to Countries and North American Geography. 'Great_Britain', on the other hand, is linked to 'British History' and 'Politics and government', but no 'European Geography'.
-On average categories have 40 articles. If we now look at the distribution of the categories, we see it is not spread evenly.
+On average categories have 40 articles. If we now look at the distribution of the categories, we see it is not spread evenly. We will consider the categories to understand the differences between the human and the LLM semantic distances, so it is important to see if there is a disparity in the representation of each category.
 ![](/charts/wikispeedia_categories_distrib.png)
 
 
@@ -153,7 +156,7 @@ The median for the paths created by the LLM without memory is of 3 steps with a 
 
 ![](/charts/gpt4omni_no_memory_humans_98th_percentile_paths_finished_steps.png)
 
-Over here, we can see more clearly how much both distributions are different. The human paths are spreading more towards the right, i.e. they are lengthier in general.
+Over here, we can see more clearly how much both distributions are different. The human paths are spreading more towards the right, i.e. they are longer in general.
 We can look at specific examples. United_States -> Abraham_Lincoln. A human mind might first think about Abraham Lincoln being President of the United States, and hence take the path United_States -> President_of_the_United_States -> Abraham_Lincoln. Our machine abstracts these unnecessary connections and "sees" that Abraham_Lincoln is directly reachable from United_States.
 As a first indicator, this shows that our machine is able to think more efficiently than humans. It is able to link two notions together in smaller steps, displaying great skills at this game.
 
@@ -292,7 +295,7 @@ In general, the semantic distances computed from LLM paths (without memory) are 
 
 We found out that most article pairs had similar distances from humans and the LLM, with a mean and median distance difference of -0.02 and -0.03, respectively, and an big peak in our histogram around 0, meaning more than 1200 pairs have the same semantic distance for both humans and LLM. Thus, on average, the difference is only a small deviation from the average semantic distance, which is around 0.4 (both for LLM and humans). However, this small average difference hides the fact that there is actually quite some variance. Most distances distance differences are close to zero, but given that most distances are small, the differences are still significant in most cases. For example, 50% of the articles pairs that had both a human and an LLM semantic distance had an absolute difference in semantic distance of less than 0.12, but 0.12 represents more than 25% of the average distance. And this still leaves us with 50% of the pairs that have an even bigger distance difference between humans and LLM.
 
-The plot of differences looks somewhat like a Gaussian distribution centered around 0, with very small number of article pairs having very large distance differences (more than 0.5). However, the disproportionate peak at 0 breaks the normality of the data, and both the Anderson-Darling test, the D’Agostino’s K^2 test and a QQ plot show that the distances do not formally follow a normal distribution. This leads us to think it might more look like a Laplace distribution.
+The plot of differences looks somewhat like a Gaussian distribution centered around 0, with a very small number of article pairs having very large distance differences (more than 0.5). However, the disproportionate peak at 0 breaks the normality of the data, and both the Anderson-Darling test, the D’Agostino’s K^2 test, and a QQ plot show that the distances do not formally follow a normal distribution. The Anderson-Darling test measures the goodness-of-fit by quantifying the distance between the observed cumulative distribution and the expected one, placing more weight on the tails. The D’Agostino’s K^2 test examines the skewness and kurtosis of the data, testing whether these deviate significantly from what would be expected under a normal distribution. Finally, the QQ plot graphically compares the quantiles of the observed data to a theoretical normal distribution, making deviations from normality visually apparent. This leads us to think it might more look like a Laplace distribution.
 
 From this, we can conclude that while on average the behavior of the LLM seems to encode similar notions of semantic distances between concepts as humans, there is still some variance that makes the distances different in non-negligible ways for a significant amount of cases. This was to be expected given the protocol the LLM follows: playing without remembering the past steps of its path as it moves through the graph, leading to potentially less strategic and planned decisions involving conceptual relationships, and a bit more random wandering, amplified by the randomness inherent to the LLM.
 
@@ -337,7 +340,7 @@ Therefore, we can overall conclude that our machine aligns more with humans in t
 
 <br /><br /><br />
 # In summary
-In the face of our world dealing with the aftermath of a crisis, understanding human cognition and behavior is paramount for rebuilding civilization. Our study, conducted here at the Applied Digital Anthropology department, delved into the intricacies of human thought by analyzing Wikispeedia gameplay. We observed that while LLMs can navigate the information space efficiently, their capabilities are still limited and the strategies employed often diverge from human approaches. Notably, LLMs without memory get stuck quickly in loops or give wrong answers. LLMs with memory, on the other hand, struggle to replicate the human tendency to "get away" and then "home in" on target concepts. This suggests that AI models at our disposal may still lack the nuanced understanding of human language and the ability to fully emulate human-like reasoning processes. 
+In the face of our world dealing with the aftermath of a crisis, understanding human cognition and behavior is paramount for rebuilding civilization. Our study, conducted here at the Applied Digital Anthropology department, delved into the intricacies of human thought by analyzing Wikispeedia gameplay. We observed that while LLMs can navigate the information space efficiently, their capabilities are still limited and the strategies employed often diverge from human approaches. Notably, LLMs without memory get stuck quickly in loops or give wrong answers. LLMs with memory, on the other hand, struggle to replicate the human tendency to "get away" and then "home in" on target concepts. 
 
 Further research is crucial to bridge this gap and develop AI systems that can effectively assist in the reconstruction and optimization of our post-apocalyptic society. By understanding the nuances of human cognition, we can leverage the power of AI to rebuild a more resilient and informed future.
 <br />
