@@ -43,6 +43,8 @@ Our team is exploring how machines can simulate human cognition and strategies t
 Together, we form **ADAspeedia**, a team united in exploring how machines can emulate and evolve human behavior. To see the real faces of our team, click [here](/team). You can also view our real functions in the [readme](https://github.com/epfl-ada/ada-2024-project-adaspeedia/blob/main/README.md).
 
 # A Human Blueprint 
+***A descriptive analysis of the human Wikispeedia dataset***
+
 To recreate human-like behavior, we first need to understand how humans played Wikispeedia. What strategies did they use? Did they wander aimlessly or systematically? How did they balance the exploration of diverse topics with the focused goal of reaching their destination? These questions guided our initial analysis of the human dataset, revealing the intricacies of the paths taken, the cognitive shortcuts employed, and the common hurdles encountered.
 
 For this, we have data extracted from the Previous Age. A team of researchers from EPFL has collected thousands of paths taken by humans, [unified in a single dataset](https://snap.stanford.edu/data/wikispeedia.html).  
@@ -94,6 +96,7 @@ Here we don't see any positive correlation. Hence we can't definitely relate rat
 Players can forfeit their attempt in two different ways: either by timing out after 30 minutes of inactivity, or by restarting manually. There is overall 64.5% of restarts and 35.5% of timeouts.
 
 # Building our machine
+***Protocol for data collection***
 
 To ensure our AI models are as reliable as possible while minimizing computation time, we have chosen the GPT-4o mini model from 2024, which is still operational today in one of the decommissioned datacenters we have repurposed. At the time, it was the most efficient and cost-effective model, making it ideal for this type of task.  
 
@@ -106,6 +109,7 @@ Our analysis will be conducted in two distinct ways: with and without memory for
 To avoid loops (which can easily occur when the LLM lacks memory), we deliberately choose to halt exploration whenever a loop is detected. The complete code is available here.  
 
 # The digital mind's capabilities: A comparative analysis
+***Do LLMs find shorter paths than humans on average and how do they compare to humans overall?***
 
 A good first indicator of our machine's capabilities is to look at the lengths of the paths completed.
 As a reminder, we've already seen previously that human paths are on average 6 steps long, with a maximum of 434.
@@ -114,7 +118,7 @@ The median for the paths created by the LLM without memory is of 3 steps with a 
 
 ![](/charts/gpt4omni_no_memory_humans_98th_percentile_paths_finished_steps.png)
 
-Over here, we can see more clearly how much both distributions are different. The human paths are spreading more towards the right, i.e. they are more lenghier in general.
+Over here, we can see more clearly how much both distributions are different. The human paths are spreading more towards the right, i.e. they are more lenghtier in general.
 We can look at specific examples. United_States -> Abraham_Lincoln. A human mind might first think about Abraham Lincoln being President of the United States, and hence take the path United_States -> President_of_the_United_States -> Abraham_Lincoln. Our machine abstracts these unnecessary connections and "sees" that Abraham_Lincoln is directly reacheable from United_States.
 As a first indicator, this shows that our machine is able to think more efficiently than humans. It is able to link two notions together in smaller steps, displaying great skills at this game.
 
@@ -144,12 +148,32 @@ As previously mentionned, humans usually adopt a strategy of getting away then h
 Humans seem to focus on various geographical locations more. In contrast, the machine appears more focused on scientific concepts. Still, some articles appear on both, such as United_States. When looking at the connectivity of the Wikipedia article for United States, it reveals 1551 incoming and 294 outgoing links. This mean that the U.S. article is a great hub that can be easily accessible and lead to many useful links. 
 The fact that it is less used than the Wikipedia article for "Animal" on the machine side seems surprising. However, this might reveal some implicit bias from the LLM towards the United_States article. It may not want to use that article as it might have been trained to avoid controversial notions and stay on more "neutral" concepts such as science and nature. This can explain why it prefers going through 'Animal' despite that article being 3 times less reacheable and leading to 10 times less articles than 'United_States'. Nonetheless, the 'United_States' article is still a close second, which shows how useful and unavoidable this article is.
 
+We further wanted to understand our machines capabilites by looking at how much humans vs the LLM tend to make the same choice when they are several times on the same article with the same goal to reach. For this, we studied the distribution of the entropy for every pair (goal, current_article) that was encountered, by humans or by LLMs.
 
-As you can see, our initial basic protocol leads to a significant number of paths left unexplored to completion, largely due to detected loops.  
-As a further step, we run our LLM with memory on this specific subset of unfinished paths, along with a sample of standard paths, to compare the performance of the memoryless LLM against the one with memory. In total, 13,411 paths are processed by our system.
+![](/charts/humans_vs_llm_entropy_distribution.png)
 
-# Side research: other models?
-Do you want to see more ? From the beginning we saw how GPT-4 plays Wikispeedia. How about other LLMs?
+We see that when they are on a given article with a given goal in mind, the humans tend to make more predictable choices than the LLM. This is shown by the entropy of the probability distribution corresponding to which outgoing link is chosen from a given article with a given goal. This entropy tends to be lower for humans than for the LLM. The difference between the two distributions is significant above the 0.05 threshold using a Kolmogorov-Smirnov test.
+This tends to suggest that all the human players are together more consistent among themselves than the LLM is consistent with itself, despite the fact that humans on a given article with a given goal have the information of the previous articles they’ve already visited on this path, which could introduce variability in their choices, when the LLM only knows the current article, the start article and its goal when making its choice, which should tend to make it more deterministic. However, we observe the opposite. Either the LLM just makes more random choices in general, or knowing the starting goal from the prompt makes its choice differ even when the current and the goal article are the same.
+
+Something you might have noticed is the smaller amount of data from our first model. Indeed, our initial basic protocol leads to a success rate of 55% with a significant number of paths left unexplored to completion, largely due to detected loops.  
+As a further step, we run our LLM with memory on this specific subset of unfinished paths, along with a sample of standard paths, to compare the performance of the memoryless LLM against the one with memory. In total, 13,411 paths are processed by our new system.
+
+As stated before, we begin by look at the lengths of the completed paths.
+![](/charts/gpt4omni_memory_paths_finished_steps.png)
+The median for the paths created by the LLM with memory is of 6 steps with a maximum of 57. Clearly, LLMs with memory tend to complete paths slower than without, showing that the machine is feeling around the articles and have difficulties finding a good suit.
+As for the comparison with human, the llm with memory makes outliers paths, a good way to have a better understanding is to take both datasets up to the 99th percentile. 
+
+![](/charts/gpt4omni_memory_humans_98th_percentile_paths_finished_steps.png)
+
+Over here, we can see more clearly how much both distributions are different. The LLM with memory paths are spreading more towards the right, i.e. they are more lengthier in general.
+This shows that our machine with memory is not able to get faster than humans.
+
+Even if the machine with memory is slower we can see that it improves on the success rate. We made the machine play on the paths unfinished by the LLM without memory and we saw that a success rate of 56,3%.
+
+![](/charts/outcome_paths_llm_memory.png)
+
+## Side research: other models?
+***From the beginning we saw how GPT-4 plays Wikispeedia. How about other LLMs?***
 
 Did you here about MistralAI. It is an European leader in artificial intelligence. We chose this llm and made it follow the same protocol as our first one, without any memory. Let's see how it does.
 
@@ -163,8 +187,73 @@ For the finished paths, we compared the number of steps taken and we can see tha
 
 We can see that for both models the success rate is similar. However, OpenAI's GPT-4 tends to loop more and MistralAI tends to give more wrong answers. This can show differents digital minds, i.e. different abilities for a given task. From that we can speculate that MistralAI might have a bigger temperature, leading to more randomness in the answers and hence less predictable or correct results.
 
+# Shared strategies
+***Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do?***
+
+It was studied by Robert West, a notorious neural-data scientist from the previous century, that human players followed a pattern when playing the Wikispeedia game. 
+The structure of human paths followed a two-fold structure:
+<ol>
+  <li>Getting out: Leaving the start article in search of a central "hub" from which players could reach many different target articles (e.g: United States).</li>
+  <li>Homing in: The path from the chosen hub to the target article of the Wikispeedia game, getting more and more specific in the concepts crossed.</li>
+</ol> 
+Going from the record of Wikispeedia games to the Wikispeedia measure of semantic relatedness requires caution: when in the getting out phase, players did not consider how the next article would allow them approach the target, but rather how they would allow them to reach the hub. Only the homing-in part of the path can then be considered to evaluate semantic relatedness between the articles of the path and the target article.
+
+To formalize the analysis of this pattern, we use the concept of information gain. 
+We explain it simply: The information gain corresponds to how much the randomness of the expected choices decreases going from one article to the next. 
+The prime example of a high information gain is reaching an article where the link to the target article appears: From this article and with this link, the entropy is very low as players are incentivized to click on the target link. On the contrary, the information gain is at its lowest when the players reach the hub, which is often very far from the target article.
+
+To separate the Getting Out and Homing in phases of the path, we use the lowest information gain point. This way, we compute the semantic distance only on the Homing in phase.
+
+The evolution of the information gain throughout human paths is representative of the two-fold structure that we mentioned. We can see it as it is convex, with a phase of decreasing information gain as we reach the hub and an increasing information gain during the homing in phase. 
+
+![](/charts/information_gain_humans.png)
+
+Such a convex distribution of information gain for a varying path step can also be seen in the mean information gains for the LLM that does not use memory:
+
+![](/charts/information_gain_llm_no_memory.png)
+
+This similarity allows us to use the homing in phase to compute semantic distances according to the LLM without memory. But using the LLM with memory, we noticed that the convexity of the information gain distribution was for from clear, which convinced us that computing semantic distances for these paths bases on the Wikispeedia method was not possible:
+
+![](/charts/information_gain_llm_with_memory.png)
+
+We cannot conclude that the LLM with memory has a getting out and homing in phase as there is no clear cutoff: our study shows that when given memory, an LLM plays Wikispeedia according to another strategy. First, it wanders around the graph, before doing a very short homing in phase. An example of this wandering phase can be seen in this path: War -> Wave. The LLM without memory finishes it quite clearly by going through the Energy hub. However, the LLM with memory goes through almost every century until reaching the end.
+
+**LLM Path:**
+War → Weapon → Energy → Physics → Wave
+
+**LLM Memory Path:**
+War → Ancient_Greece → Ancient_Rome → 1st_century_BC → Roman_Empire → 3rd_century → 4th_century → 5th_century → 6th_century → 7th_century → 8th_century → 9th_century → 10th_century → 11th_century → 12th_century → 13th_century → 14th_century → 15th_century → Renaissance → 16th_century → 17th_century → 18th_century → 19th_century → 20th_century → 21st_century → Tsunami → Wave
+
+Thus, our analysis in the following parts only covers the LLM semantic distances when the LLM is given no memory.
+
+# A question of perspective
+***How do the distributions of computed semantic distance differ between human and machine?**
+
+Here, we aim to understand whether we obtain identical semantic distances or not, between our human and machine datas, and if not, try to see if we can find patterns:
+    - Which ones are longer? LLM-based or human-based? By how much? What is the distribution?
+    - Do the articles that have distances that differ the most belong to specific categories?
+
+We wanted to see whether the games played by the LLMs would lead to different semantic distance measures. We computed the semantic distances between pairs of articles using both human game paths ad LLM game paths (without memory), using the same method as in the [**Wikispeedia paper**](http://infolab.stanford.edu/~west1/pubs/West-Pineau-Precup_IJCAI-09.pdf). Then for all the pairs for which we had both an LLM distance and a human distance, we plotted the difference between the two distances. 
+
+We expected to have some differences, as the LLM played the game without memory, contrary to humans, potentially leading to different strategies, different concept associations and thus different semantic distances inferred.
+
+![](/charts/difference_humans_llm.png)
+
+In general, the semantic distances computed from LLM paths (without memory) are longer: 0.40 on average and 0.35 in median for LLM, vs 0.38 on average and 0.32 in median for humans.
+
+We found out that most article pairs had similar distances from humans and the LLM, with a mean and median distance difference of -0.02 and -0.03, respectively, and an big peak in our histogram around 0, meaning more than 1200 pairs have the same semantic distance for both humans and LLM. Thus, on average, the difference is only a small deviation from the average semantic distance, which is around 0.4 (both for LLM and humans). However, this small average difference hides the fact that there is actually quite some variance. Most distances distance differences are close to zero, but given that most distances are small, the differences are still significant in most cases. For example, 50% of the articles pairs that had both a human and an LLM semantic distance had an absolute difference in semantic distance of less than 0.12, but 0.12 represents more than 25% of the average distance. And this still leaves us with 50% of the pairs that have an even bigger distance difference between humans and LLM.
+
+The plot of differences looks somewhat like a Gaussian distribution centered around 0, with very small number of article pairs having very large distance differences (more than 0.5). However, the disproportionate peak at 0 breaks the normality of the data, and both the Anderson-Darling test, the D’Agostino’s K^2 test and a QQ plot show that the distances do not formally follow a normal distribution. This leads us to think it might more look like a Laplace distribution.
+
+From this, we can conclude that while on average the behavior of the LLM seems to encode similar notions of semantic distances between concepts as humans, there is still some variance that makes the distances different in non-negligible ways for a significant amount of cases. This was to be expected given the protocol the LLM follows: playing without remembering the past steps of its path as it moves through the graph, leading to potentially less strategic and planned decisions involving conceptual relationships, and a bit more random wandering, amplified by the randomness inherent to the LLM.
+
+Regarding the distances obtained using the LLM with memory, we consider that they are not comparable because the paths of the LLM with memory do not exhibit the same pattern of getting away to a hub and then homing in on the goal, thus not allowing us to filter out the potentially irrelevant distances by using the point of minimum information gain. Hence, we did not perform the same analysis of semantic distance difference between human and memory-based LLM semantic distances.
+
+We decided to dig deeper in these big differences. We looked at the 10% of article pairs that had the biggest difference, and found articles of all categories and all types of pairs, thus not able to identify a predominant pattern in these pairs of articles.
+
 
 # The machine's understanding of the human language
+***Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?***
 
 Prior to our study, other methods already existed to compute the semantic distance between two words. Indeed, language models usually use a system of *word embeddings*, which is a specific representation of words and notions. An interesting point with these embeddings is that they can be visualized as high-dimensionnal vectors. They can hence be compared together with simpler comparison tools, such as the euclidean L2 distance.
 Previous studies show that the embeddings learned by models usually capture the semantic behind words. For example, as embeddings are vectors, we can add them up together. It turns out that the result of the operation 'Greece' - 'Athens' + 'Paris' yields a very similar vector to the one representing 'France'.
