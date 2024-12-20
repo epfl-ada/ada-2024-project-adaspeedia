@@ -63,6 +63,12 @@ We can also look at this data the other way around: based on the articles at our
 ![](/charts/wikispeedia_articles_incoming_links.png)
 We can note that articles are always reachable within our given set. The median number of incoming links is of 10, while the mean is of 29 incoming links. Some severe outliers, such as the United States article again with 1551 incoming links, skew the distribution to the right.
 
+    <Alert variant="info">
+        <AlertTitle style={{ fontSize: '1.5em' }}>Explore how articles are linked together!</AlertTitle>
+        <AlertDescription>Which links lead to which articles? Are there multiple connections between them? Please note that for large articles, the display may not be optimized.</AlertDescription><br />
+        <a href="/links"><Button>🔗 Look into the Wikipedia structure!</Button></a>
+    </Alert>
+
 ### Categories
 These refer to the classification of each article based on high level concepts they are each related to. In total, 129 categories are available in our dataset. 88% of articles are linked to one single category, around 11% have two and less than 1% have 3. This reveal different level of granularity and lack of coherence in the dataset. For example, 'United_States' is linked to Countries and North American Geography. 'Great_Britain', on the other hand, is linked to 'British History' and 'Politics and government', but no 'European Geography'.
 On average categories have 40 articles. If we now look at the distribution of the categories, we see it is not spread evenly.
@@ -313,6 +319,6 @@ Further research is crucial to bridge this gap and develop AI systems that can e
 <br />
     <Alert variant="info">
         <AlertTitle style={{ fontSize: '1.5em' }}>What does Wikipedia look like?</AlertTitle>
-        <AlertDescription>You can use our **links visualization tool** to look at how articles are linked together.</AlertDescription><br />
-        <a href="/browser"><Button>🔎 Look into the Wikipedia structure!</Button></a>
+        <AlertDescription>You can use our **links visualization tool** to look at how articles are linked together. Please note that for large articles, the display may not be optimized.</AlertDescription><br />
+        <a href="/links"><Button>🔎 Look into the Wikipedia structure</Button></a>
     </Alert>
