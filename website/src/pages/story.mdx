@@ -6,6 +6,7 @@ description:
 import '../styles/team.css';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Terminal } from "lucide-react"
 
 In a world where humanity must rebuild from the ashes, games may seem like a trivial pursuit. Yet, in the aftermath of the apocalypse, our mission at the **Applied Digital Anthropology (ADA)** department of the New Age government is anything but trivial. Tasked with restoring the essence of human civilization, we’ve turned to an unexpected cornerstone of human experience: games.
 
@@ -104,9 +105,18 @@ We will later compare it to another model, MistralAI Large-2407, also from 2024,
 
 Our analysis will be conducted in two distinct ways: with and without memory for the LLM. Initially, we will run an LLM without memory on a unique subset of human paths. There are 28,718 such paths, meaning our first LLM without memory will generate 28,718 paths based on the following prompt:  
 
-[prompt box]
+    <Alert>
+      <Terminal className="h-4 w-4" />
+      <AlertTitle>model: "gpt-4o-mini" </AlertTitle>
+      <AlertDescription>
+        You are navigating Wikipedia from `start_article` to `end_article`.  
+        Currently at `current_article`.  
+        Available links: `join(linked_articles)`.  
+        Which article would you like to visit next? Respond only with the article name.
+      </AlertDescription>
+    </Alert>
 
-To avoid loops (which can easily occur when the LLM lacks memory), we deliberately choose to halt exploration whenever a loop is detected. The complete code is available here.  
+To avoid loops (which can easily occur when the LLM lacks memory), we deliberately choose to halt exploration whenever a loop is detected. The complete code is available [here](https://github.com/epfl-ada/ada-2024-project-adaspeedia/blob/main/src/scripts/run_llm_paths.py).  
 
 <br /><br /><br />
 # The digital mind's capabilities: A comparative analysis
