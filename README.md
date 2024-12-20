@@ -1,7 +1,7 @@
 
 # Let LLM play Wikispeedia!
 
-## How do the semantic distances elicited from LLMs using the Wikispeedia measure of relatedness compare to the ones computed from human games?
+## How do LLMs compare to humans when playing the game of Wikispeedia regarding their strategy, results, and the semantic distances elicited from the Wikispeedia measure of relatedness ?
 
 Discover the [data story here](https://adaspeedia.pages.dev/)!
 
@@ -113,6 +113,14 @@ Thomas Kuntz:
 - Exploring the correlation between the path length and the semantic distance between the start and goal article, both for humans and LLM without memory
 - Answered research question 1 and wrote the corresponding part of the data story
 - Modularized and documented all the code from milestone 2
+
+Léo Paoletti:
+- Answered research question 2
+- Wrote the corresponding part of the data story on the evolution of the information game for human games, LLM with and without memory
+- Computation of the semantic distances
+- Reviewed and refactored the data story
+- Generation of the OpenAI data
+
 
 
 ## Quickstart
