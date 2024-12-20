@@ -40,15 +40,16 @@ Our team is exploring how machines can simulate human cognition and strategies t
     </div>
 </div>
 
-Together, we form **ADAspeedia**, a team united in exploring how machines can emulate and evolve human behavior. To see the real faces of our team, click [here](/team). You can also view our real functions in the [readme](https://github.com/epfl-ada/ada-2024-project-adaspeedia/blob/main/README.md).
+Together, we form **ADAspeedia**, a team united in exploring how machines can emulate and evolve human behavior. To see the real faces of our team, click [here](/team). You can also view our real functions in the [readme](https://github.com/epfl-ada/ada-2024-project-adaspeedia?tab=readme-ov-file#contributions-of-the-group-members).
 
+<br /><br /><br />
 # A Human Blueprint 
 ***A descriptive analysis of the human Wikispeedia dataset***
 
 To recreate human-like behavior, we first need to understand how humans played Wikispeedia. What strategies did they use? Did they wander aimlessly or systematically? How did they balance the exploration of diverse topics with the focused goal of reaching their destination? These questions guided our initial analysis of the human dataset, revealing the intricacies of the paths taken, the cognitive shortcuts employed, and the common hurdles encountered.
 
 For this, we have data extracted from the Previous Age. A team of researchers from EPFL has collected thousands of paths taken by humans, [unified in a single dataset](https://snap.stanford.edu/data/wikispeedia.html).  
-We've analyzed it to keep only the essentials
+We've analyzed it to keep only the essentials.
 
 ### Articles
 This is the data containing the name and data contained in each article. In total we have access to 4604 different articles.
@@ -95,6 +96,7 @@ Here we don't see any positive correlation. Hence we can't definitely relate rat
 
 Players can forfeit their attempt in two different ways: either by timing out after 30 minutes of inactivity, or by restarting manually. There is overall 64.5% of restarts and 35.5% of timeouts.
 
+<br /><br /><br />
 # Building our machine
 ***Protocol for data collection***
 
@@ -108,6 +110,7 @@ Our analysis will be conducted in two distinct ways: with and without memory for
 
 To avoid loops (which can easily occur when the LLM lacks memory), we deliberately choose to halt exploration whenever a loop is detected. The complete code is available here.  
 
+<br /><br /><br />
 # The digital mind's capabilities: A comparative analysis
 ***Do LLMs find shorter paths than humans on average and how do they compare to humans overall?***
 
@@ -124,7 +127,7 @@ As a first indicator, this shows that our machine is able to think more efficien
 
 
    <Alert variant="info">
-        <AlertTitle>Note</AlertTitle>
+        <AlertTitle style={{ fontSize: '1.5em' }}>Note</AlertTitle>
         <AlertDescription>You can use our **paths browser** to compare how both LLM and humans navigated different paths</AlertDescription><br />
         <a href="/browser"><Button>🔎 Explore Paths</Button></a>
     </Alert>
@@ -187,6 +190,7 @@ For the finished paths, we compared the number of steps taken and we can see tha
 
 We can see that for both models the success rate is similar. However, OpenAI's GPT-4 tends to loop more and MistralAI tends to give more wrong answers. This can show different digital minds, i.e. different abilities for a given task. From that we can speculate that MistralAI might have a bigger temperature, leading to more randomness in the answers and hence less predictable or correct results.
 
+<br /><br /><br />
 # Shared strategies
 ***Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do?***
 
@@ -226,8 +230,9 @@ War → Ancient_Greece → Ancient_Rome → 1st_century_BC → Roman_Empire → 
 
 Thus, our analysis in the following parts only covers the LLM semantic distances when the LLM is given no memory.
 
+<br /><br /><br />
 # A question of perspective
-***How do the distributions of computed semantic distance differ between human and machine?**
+***How do the distributions of computed semantic distance differ between human and machine?***
 
 Here, we aim to understand whether we obtain identical semantic distances or not, between our human and machine datas, and if not, try to see if we can find patterns:
     - Which ones are longer? LLM-based or human-based? By how much? What is the distribution?
@@ -251,7 +256,7 @@ Regarding the distances obtained using the LLM with memory, we consider that the
 
 We decided to dig deeper in these big differences. We looked at the 10% of article pairs that had the biggest difference, and found articles of all categories and all types of pairs, thus not able to identify a predominant pattern in these pairs of articles.
 
-
+<br /><br /><br />
 # The machine's understanding of the human language
 ***Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?***
 
@@ -286,19 +291,20 @@ Now, looking at the distribution of the difference between human computed distan
 
 Therefore, we can overall conclude that our machine aligns more with humans in the distance computed based on the paths it plays, hence it mimics the human behavior as expected.
 
-# In summation
+<br /><br /><br />
+# In summary
 In the face of our world dealing with the aftermath of a crisis, understanding human cognition and behavior is paramount for rebuilding civilization. Our study, conducted here at the Applied Digital Anthropology department, delved into the intricacies of human thought by analyzing Wikispeedia gameplay. We observed that while LLMs can navigate the information space efficiently, their capabilities are still limited and the strategies employed often diverge from human approaches. Notably, LLMs without memory get stuck quickly in loops or give wrong answers. LLMs with memory, on the other hand, struggle to replicate the human tendency to "get away" and then "home in" on target concepts. This suggests that AI models at our disposal may still lack the nuanced understanding of human language and the ability to fully emulate human-like reasoning processes. 
 
 Further research is crucial to bridge this gap and develop AI systems that can effectively assist in the reconstruction and optimization of our post-apocalyptic society. By understanding the nuances of human cognition, we can leverage the power of AI to rebuild a more resilient and informed future.
-
+<br />
    <Alert variant="info">
-        <AlertTitle>Want to see more?</AlertTitle>
+        <AlertTitle style={{ fontSize: '1.5em' }}>Want to see more?</AlertTitle>
         <AlertDescription>You can use our **distances plotter** to compare the distance computed for LLM and humans on different pair of articles.</AlertDescription><br />
-        <a href="/browser"><Button>🔎 Look into distances computed</Button></a>
+        <a href="/distances"><Button>📊 Look into distances computed!</Button></a>
     </Alert>
-
+<br />
     <Alert variant="info">
-        <AlertTitle>What does Wikipedia look like?</AlertTitle>
+        <AlertTitle style={{ fontSize: '1.5em' }}>What does Wikipedia look like?</AlertTitle>
         <AlertDescription>You can use our **links visualization tool** to look at how articles are linked together.</AlertDescription><br />
         <a href="/browser"><Button>🔎 Look into the Wikipedia structure!</Button></a>
     </Alert>
