@@ -49,7 +49,7 @@ Together, we form **ADAspeedia**, a team united in exploring how machines can em
 To recreate human-like behavior, we first need to understand how humans played Wikispeedia. What strategies did they use? Did they wander aimlessly or systematically? How did they balance the exploration of diverse topics with the focused goal of reaching their destination? These questions guided our initial analysis of the human dataset, revealing the intricacies of the paths taken, the cognitive shortcuts employed, and the common hurdles encountered.
 
 For this, we have data extracted from the Previous Age. A team of researchers from EPFL has collected thousands of paths taken by humans, [unified in a single dataset](https://snap.stanford.edu/data/wikispeedia.html).  
-We've analyzed it to keep only the essentials.
+We’ve analyzed it to keep only the essential features useful for our research.
 
 ### Articles
 This is the data containing the name and data contained in each article. In total we have access to 4604 different articles.
@@ -57,7 +57,7 @@ This is the data containing the name and data contained in each article. In tota
 ### Links
 This is the list of outgoing links from a given source article.
 ![](/charts/wikispeedia_articles_links.png)
-On average, articles have around 26 outgoing links, the median being at 19. Half the articles have between 11 and 33 outgoing links. The United States article has the most outgoing links (294), and each article has at least 1 outgoing link. The distribution of the number of links per article is right-skewed.
+On average, articles have around 26 outgoing links, the median being at 19. Half the articles have between 11 and 33 outgoing links. The United States article has the most outgoing links (294), and each article has at least 1 outgoing link. The distribution of the number of links per article is right-skewed. We show the number of outgoing links and its distribution because they play a crucial role in how we can evaluate the relatedness between two articles, as any metrics should be inversely weighted by the PageRank value of the article. Pagerank is an algorithm that gives a weight to each node of a graph based on how often a surfer would land on it by traversing the graph at random. 
 We can also look at this data the other way around: based on the articles at our disposal, how many incoming links are there per articles? This can give us an idea of how reachable articles are.
 ![](/charts/wikispeedia_articles_incoming_links.png)
 We can note that articles are always reachable within our given set. The median number of incoming links is of 10, while the mean is of 29 incoming links. Some severe outliers, such as the United States article again with 1551 incoming links, skew the distribution to the right.
@@ -75,8 +75,6 @@ In total we have access to 28718 finished paths and 24875 unfinished ones.
 #### Paths finished
 On average humans take 6 steps to get to the goal. A few outliers are present, such as the path with the maximum number of steps (434) to go from 'United_States' to 'English_language', or the second to first, taking 118 steps to go from Napoleon_I_of_France to Recycling.
 ![](/charts/humans_paths_finished_steps.png)
-
-Do people take a long time to finish a path? The average time is 2min 41s. The longest time is 9h 58min 21s. The shortest time is 0 seconds, which for paths finished can only mean that the goal and start article were the same. Most of the players (80th percentile) took less than 3 minutes, 31 seconds to finish a game.
 
 Another info we have are the ratings: These are user submitted grades between 1 and 5 representing the level of difficulty felt on the given path. This information is optional, hence we have less values to base our description on (approx. 55%).
 
@@ -117,7 +115,7 @@ To avoid loops (which can easily occur when the LLM lacks memory), we deliberate
 A good first indicator of our machine's capabilities is to look at the lengths of the paths completed.
 As a reminder, we've already seen previously that human paths are on average 6 steps long, with a maximum of 434.
 ![](/charts/gpt4omni_no_memory_paths_finished_steps.png)
-The median for the paths created by the LLM without memory is of 3 steps with a maximum of 16. Clearly, LLMs tend to complete paths faster than humans, showing that the machine is clearly playing better than humans. However, as previously stated outliers are present within the human dataset. This may hinder our ability to truly visualize how both distributions are. To correct that, we suggest looking at the value up to the 99th percentile.
+The median for the paths created by the LLM without memory is of 3 steps with a maximum of 16. Clearly, LLMs tend to complete paths faster than humans, showing that the machine is playing better than humans. However, as previously stated outliers are present within the human dataset. This may hinder our ability to truly visualize how both distributions are. To correct that, we suggest looking at the value up to the 99th percentile.
 
 ![](/charts/gpt4omni_no_memory_humans_98th_percentile_paths_finished_steps.png)
 
