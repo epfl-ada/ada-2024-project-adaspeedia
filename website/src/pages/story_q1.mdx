@@ -36,3 +36,13 @@ Do the article pairs that have the biggest difference in their human vs LLM sema
 (TODO: move to another part, it does not belong to Q1)
 
 Does the path length correlate with the semantic distance between the starting and goal article of the path? -> Yes, a little bit. So what? (Thomas)
+
+----
+
+Are LLMs or humans more deterministic in their choices? We wanted to understand how much humans vs the LLM tend to make the same choice when they are several times placed on the same article with the same goal to reach. For this, we studied the distribution of the entropy for every pair (goal, current_article) that was encountered, by humans or by LLMs, and we plotted this distribution as a histogram.
+
+![](/charts/humans_vs_llm_entropy_distribution.png)
+
+We see that when they are on a give article with a given goal in mind, the humans tend to make more predictable choices than the LLM. This is shown by the fact that the entropy of the probability distribution of which out-link is going to be clicked from a given article and with a given goal, this entropy tends to be lower for humans than for the LLM.
+
+This tends to suggest that all the human players are together more consistent among themselves than the LLM is consistent with itself. and this despite the fact that humans on a given article with a given goal have the information of the previous articles they’ve already visited on this path, which could introduce variability in their choices, when the LLM only knows the current article, the start article and its goal when making its choice, which should tend to make it more deterministic. But we observe the opposite.
