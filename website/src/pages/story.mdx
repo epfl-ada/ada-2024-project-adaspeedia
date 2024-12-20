@@ -85,7 +85,7 @@ Our two indicators of difficulty are the path length and the ratings. The latter
 
 Obviously a positive correlation appears visually, but this is also due to outliers in the data. If we remove them, by taking only the path lengths under the 80th percentile (13), we get the following plot:
 ![](/charts/wikispeedia_pathlength_rating_q80.png)
-When computing the Spearman R correlation coefficient, we find a positive correlation of 0.46 with a p-value at 0.0. This clearly shows that in our dataset, path length and ratings are positively corellated.
+When computing the Spearman R correlation coefficient, we find a positive correlation of 0.46 with a p-value at 0.0. This clearly shows that in our dataset, path length and ratings are positively correlated.
 
 #### Paths unfinished
 Within the 24875 unfinished paths, there is actually only 18190 unique ones, the other being duplicate attempts at the same source-goal pair of articles.
@@ -118,8 +118,8 @@ The median for the paths created by the LLM without memory is of 3 steps with a 
 
 ![](/charts/gpt4omni_no_memory_humans_98th_percentile_paths_finished_steps.png)
 
-Over here, we can see more clearly how much both distributions are different. The human paths are spreading more towards the right, i.e. they are more lenghtier in general.
-We can look at specific examples. United_States -> Abraham_Lincoln. A human mind might first think about Abraham Lincoln being President of the United States, and hence take the path United_States -> President_of_the_United_States -> Abraham_Lincoln. Our machine abstracts these unnecessary connections and "sees" that Abraham_Lincoln is directly reacheable from United_States.
+Over here, we can see more clearly how much both distributions are different. The human paths are spreading more towards the right, i.e. they are more lengthier in general.
+We can look at specific examples. United_States -> Abraham_Lincoln. A human mind might first think about Abraham Lincoln being President of the United States, and hence take the path United_States -> President_of_the_United_States -> Abraham_Lincoln. Our machine abstracts these unnecessary connections and "sees" that Abraham_Lincoln is directly reachable from United_States.
 As a first indicator, this shows that our machine is able to think more efficiently than humans. It is able to link two notions together in smaller steps, displaying great skills at this game.
 
 
@@ -138,9 +138,9 @@ Here, the machine has been able to finish 30% of paths that humans were previous
 
 ![](/charts/llm_finished_vs_unfinished.png)
 
-We clearly see that overall, our machine takes more steps on these paths than on the previous ones, with a median of 5 steps. This shows that these paths requires more raffined thinking, which can explain why humans failed.
+We clearly see that overall, our machine takes more steps on these paths than on the previous ones, with a median of 5 steps. This shows that these paths requires more refined thinking, which can explain why humans failed.
 
-As previously mentionned, humans usually adopt a strategy of getting away then homing in, passing through hubs. Let's see if the most visited articles are similar.
+As previously mentioned, humans usually adopt a strategy of getting away then homing in, passing through hubs. Let's see if the most visited articles are similar.
 
 ![](/charts/most_visited_articles_human.png)
 ![](/charts/most_visited_articles_llm.png)
@@ -185,7 +185,7 @@ For the finished paths, we compared the number of steps taken and we can see tha
 ![](/charts/piechart_openai.png)
 ![](/charts/piechart_mistralai.png)
 
-We can see that for both models the success rate is similar. However, OpenAI's GPT-4 tends to loop more and MistralAI tends to give more wrong answers. This can show differents digital minds, i.e. different abilities for a given task. From that we can speculate that MistralAI might have a bigger temperature, leading to more randomness in the answers and hence less predictable or correct results.
+We can see that for both models the success rate is similar. However, OpenAI's GPT-4 tends to loop more and MistralAI tends to give more wrong answers. This can show different digital minds, i.e. different abilities for a given task. From that we can speculate that MistralAI might have a bigger temperature, leading to more randomness in the answers and hence less predictable or correct results.
 
 # Shared strategies
 ***Do LLMs exhibit the same strategy of “getting away” and then “homing in” as the paper shows humans do?***
@@ -212,7 +212,7 @@ Such a convex distribution of information gain for a varying path step can also 
 
 ![](/charts/information_gain_llm_no_memory.png)
 
-This similarity allows us to use the homing in phase to compute semantic distances according to the LLM without memory. But using the LLM with memory, we noticed that the convexity of the information gain distribution was for from clear, which convinced us that computing semantic distances for these paths bases on the Wikispeedia method was not possible:
+This similarity allows us to use the homing in phase to compute semantic distances according to the LLM without memory. But using the LLM with memory, we noticed that the convexity of the information gain distribution was for from clear, which convinced us that computing semantic distances for these paths based on the Wikispeedia method was not possible:
 
 ![](/charts/information_gain_llm_with_memory.png)
 
@@ -255,11 +255,11 @@ We decided to dig deeper in these big differences. We looked at the 10% of artic
 # The machine's understanding of the human language
 ***Do we observe the same difference between distances from human games and LLMs games, and between distances from human games and LLM embeddings?***
 
-Prior to our study, other methods already existed to compute the semantic distance between two words. Indeed, language models usually use a system of *word embeddings*, which is a specific representation of words and notions. An interesting point with these embeddings is that they can be visualized as high-dimensionnal vectors. They can hence be compared together with simpler comparison tools, such as the euclidean L2 distance.
+Prior to our study, other methods already existed to compute the semantic distance between two words. Indeed, language models usually use a system of *word embeddings*, which is a specific representation of words and notions. An interesting point with these embeddings is that they can be visualized as high-dimensional vectors. They can hence be compared together with simpler comparison tools, such as the euclidean L2 distance.
 Previous studies show that the embeddings learned by models usually capture the semantic behind words. For example, as embeddings are vectors, we can add them up together. It turns out that the result of the operation 'Greece' - 'Athens' + 'Paris' yields a very similar vector to the one representing 'France'.
 We are now interested in the similarities in distribution between the difference in distances computed on paths played by humans VS our machine, and the difference in distances computed on paths played by humans VS existing human embeddings.
 
-We first used a Bidirectional Encoder Representations from Transformers (BERT) base model. This architecture has proven to be consistantly powerful on multiple natural language processing tasks, specifically those related to semantic understanding. Hence, it seems like the perfect fit for our task.
+We first used a Bidirectional Encoder Representations from Transformers (BERT) base model. This architecture has proven to be consistently powerful on multiple natural language processing tasks, specifically those related to semantic understanding. Hence, it seems like the perfect fit for our task.
 
 To study the distribution of differences, we followed the following protocol:
 
@@ -267,7 +267,7 @@ To study the distribution of differences, we followed the following protocol:
 
 - Compute the difference of distance for each path in common.
 
-- Extact the pair of articles.
+- Extract the pair of articles.
 
 - Compute for each of the pairs the BERT embeddings of each article.
 
@@ -280,7 +280,7 @@ To study the distribution of differences, we followed the following protocol:
 ![Distribution of difference between human computed distances and embeddings euclidean distance](/charts/difference_humans_euclidean.png)
 
 For the distribution of difference between human computed and machine computed distances, we can see that the distribution of differences between human and LLM computed distances resembles a Laplace distribution, which clearly indicates a strong alignment between human and machine understanding of semantic relationships. Indeed, this is visible because the mean, median and interquartile range are all very close to 0.
-However, the distribution is still spreading a bit, suggesting that the machine may deviate a bit more from human understanding. Besides the obvious outliers previously described (English_language), the largest difference in absolute value suggest different priorities when computing the semantic difference. For example, the difference in the human distance for Canada and Japan and the machine distance shows that the machine potentially thinks more abstractly, i.e. these are two countries, hence the concepts are very similar. However, humans may give more importance to other specificities, such as the geographic distance, lack of common history themes, etc...
+However, the distribution is still spreading a bit, suggesting that the machine may deviate a bit more from human understanding. Besides the obvious outliers previously described (English_language), the largest differences in absolute value suggest different priorities when computing the semantic difference. For example, the difference in the human distance for Canada and Japan and the machine distance shows that the machine potentially thinks more abstractly, i.e. these are two countries, hence the concepts are very similar. However, humans may give more importance to other specificities, such as the geographic distance, lack of common historical themes, etc...
 
 Now, looking at the distribution of the difference between human computed distances and embeddings, the data looks more Gaussian, with a mean and median around -6. This means that, distances computed by humans paths are usually way lower than the ones computed by humans, showing discrepancy in the understanding of the human language.
 
