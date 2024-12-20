@@ -175,6 +175,18 @@ This tends to suggest that all the human players are together more consistent am
 Something you might have noticed is the smaller amount of data from our first model. Indeed, our initial basic protocol leads to a success rate of 55% with a significant number of paths left unexplored to completion, largely due to detected loops.  
 As a further step, we run our LLM with memory on this specific subset of unfinished paths, along with a sample of standard paths, to compare the performance of the memoryless LLM against the one with memory. In total, 13,411 paths are processed by our new system.
 
+    <Alert>
+      <Terminal className="h-4 w-4" />
+      <AlertTitle>model: "gpt-4o-mini" </AlertTitle>
+      <AlertDescription>
+        You are navigating Wikipedia from `start_article` to `end_article`.  
+        ***Path taken so far: `join(path_taken)`.***  
+        Currently at `current_article`.  
+        Available links: `join(linked_articles)`.  
+        Which article would you like to visit next? Respond only with the article name.
+      </AlertDescription>
+    </Alert>
+
 As stated before, we begin by look at the lengths of the completed paths.
 ![](/charts/gpt4omni_memory_paths_finished_steps.png)
 The median for the paths created by the LLM with memory is of 6 steps with a maximum of 57. Clearly, LLMs with memory tend to complete paths slower than without, showing that the machine is feeling around the articles and have difficulties finding a good suit.
@@ -320,5 +332,5 @@ Further research is crucial to bridge this gap and develop AI systems that can e
     <Alert variant="info">
         <AlertTitle style={{ fontSize: '1.5em' }}>What does Wikipedia look like?</AlertTitle>
         <AlertDescription>You can use our **links visualization tool** to look at how articles are linked together. Please note that for large articles, the display may not be optimized.</AlertDescription><br />
-        <a href="/links"><Button>🔎 Look into the Wikipedia structure</Button></a>
+        <a href="/links"><Button>🔗 Look into the Wikipedia structure</Button></a>
     </Alert>
